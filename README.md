@@ -130,14 +130,14 @@
 </tbody>
 </table>
 
-## 📊 EDA
+## 📊 EDA:
 ### 🏛 Dataset Summary:
 ![Dataset Summary - 1](https://github.com/caesarmario/heart-disease-prediction-with-logistic-regression-SAS-studio/blob/main/Screenshot/Dataset%20Summary_1.png)<br>
 ![Dataset Summary - 2](https://github.com/caesarmario/heart-disease-prediction-with-logistic-regression-SAS-studio/blob/main/Screenshot/Dataset%20Summary_2.png)<br>
 
 - As mentioned above, there are **14 variables** with **303 observations**.
 
-### 📄 Dataset
+### 📄 Dataset:
 #### ▶ Univariate - Categorical:
 *   sex (Gender) <br>
 ![sex](https://github.com/caesarmario/heart-disease-prediction-with-logistic-regression-SAS-studio/blob/main/Screenshot/Univariate%20Analysis/Categorical/1_sex.png)<br>
@@ -214,50 +214,49 @@
     - In this column, **the kurtosis value is 1.57**, which indicates that the column is **platikurtic**.
 <br><br>
 
-### 1️⃣ EDA 1
+### 1️⃣ EDA 1:
 ![EDA1](https://github.com/caesarmario/heart-disease-prediction-with-logistic-regression-SAS-studio/blob/main/Screenshot/EDA/EDA_1.png)<br>
 
-### 2️⃣ EDA 2
+### 2️⃣ EDA 2:
 ![EDA2](https://github.com/caesarmario/heart-disease-prediction-with-logistic-regression-SAS-studio/blob/main/Screenshot/EDA/EDA_2.png)<br>
 
-### 3️⃣ EDA 3
+### 3️⃣ EDA 3:
 ![EDA3](https://github.com/caesarmario/heart-disease-prediction-with-logistic-regression-SAS-studio/blob/main/Screenshot/EDA/EDA_3.png)<br>
 
-### 4️⃣ EDA 4
+### 4️⃣ EDA 4:
 ![EDA4](https://github.com/caesarmario/heart-disease-prediction-with-logistic-regression-SAS-studio/blob/main/Screenshot/EDA/EDA_4.png)<br>
 
-### 5️⃣ EDA 5
+### 5️⃣ EDA 5:
 ![EDA5](https://github.com/caesarmario/heart-disease-prediction-with-logistic-regression-SAS-studio/blob/main/Screenshot/EDA/EDA_5.png)<br>
 
 
-## 👨‍💻 Logistic Regression Result:
-### ▶ Summary of Logistic Regression:
-![LR - 1](https://github.com/caesarmario/loan-prediction-SAS-studio/blob/main/Screenshot/Logistic%20Regression%20Output%20-%201.png)<br>
-    👉 The dataset on which the model was built has been correctly cleaned. <br>
-    👉 There are no more missing values (the number of observations reads and used is the same enabling the model to use every observation in the dataset). <br>
-    👉 The response profile reveals a highly unbalanced percentage between the two classes within the dependent variable, loan approval status, with a ratio of about 1:2 between N and Y. <br>
-![LR - 2](https://github.com/caesarmario/loan-prediction-SAS-studio/blob/main/Screenshot/Logistic%20Regression%20Output%20-%202.png)<br>
-    👉 The Convergence Status of the Model is “Satisfied,” and the AIC value is smaller than SC. <br>
-    👉 These two examples demonstrate that the Logistic Regression Model is an effective predictor. <br>
-![LR - 3](https://github.com/caesarmario/loan-prediction-SAS-studio/blob/main/Screenshot/Logistic%20Regression%20Output%20-%203.png)<br>
-    👉 It can be seen that marital status, loan history, and loan location has a significant correlation to loan approval status since the p-value is less than 0.05. <br>
-![LR - 4](https://github.com/caesarmario/loan-prediction-SAS-studio/blob/main/Screenshot/Logistic%20Regression%20Output%20-%204.png)<br>
-    👉 The p-value column “Pr > ChiSq” indicates that not all variables in the model are significant. <br>
-    👉 A p-value of less than 0.05 indicates that the variable significantly affects loan approval status variation. <br>
-    👉 Loan location and marital status impact loan approval choices. <br>
-    👉 It can be observed that work status and gender have little impact on loan approval results. <br>
+## ⚙ Dataset Pre-processing:
+- asd
 
-### ▶ Logistic Regression Model Output:
-![LR Model Output](https://github.com/caesarmario/loan-prediction-SAS-studio/blob/main/Screenshot/Logistic%20Regression%20Model%20Output.png)<br>
-    👉 There are extra columns at the end of the dataset and the standard variables. <br>
-    👉 Each column contains an estimated result from the model together with the estimated probability. <br>
+## 👨‍💻 Logistic Regression:
+### ▶ Building Logistic Regression Model:
+![X](X)<br>
+    👉 T. <br>
+
+### ▶ Show Probability in Training:
+![X](X)<br>
+    👉 T. <br>
+
+### ▶ Content of Logistic Regression Generated:
+![X](X)<br>
+    👉 T. <br>
     
-### ⚠ Prediction Output:
-![Prediction Output](https://github.com/caesarmario/loan-prediction-SAS-studio/blob/main/Screenshot/Prediction%20Output.png)<br>
-    👉 There is 1 new column showing the results of the status prediction output from the loan approval. <br>
-    👉 In addition, in addition to the new column that has been created, there is a probability of the loan application being rejected (N) and a probability of the loan application being accepted (Y).
-<br><br>
-[![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#-table-of-contents)
+### ▶ Display Predictions:
+![X](X)<br>
+    👉 T. <br>
+
+## 📥 Output Delivery System:
+### ▶ Locate the Output:
+![x](x)
+    - F.
+### ▶ Generate Output:
+![x](x)
+    - F.
 <br><br>
 
 ## 🙌 Support me!
