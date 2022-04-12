@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.4">
+    <Registration>
+        <Name>Pie Chart</Name>
+        <Description>Pie charts show the relative contribution of the parts to the whole by displaying data as wedge-shaped slices of a circle. Each slice represents a category of data. The size of a slice represents the contribution of the data to the total chart statistic.</Description>
+        <GUID>2CE90D62-24D8-4F53-A177-503E90B648F3</GUID>
+        <Procedures>SGRENDER TEMPLATE</Procedures>
+        <Version>3.8</Version>
+        <Links>
+            <Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.8&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+            <Link href=""/>
+            <Link href=""/>
+            <Link href="http://documentation.sas.com/?softwareId=MVADOC&amp;softwareVersion=3.8_9.4&amp;softwareContextId=proc_sgrender&amp;requestor=inapp">The SGRENDER Procedure</Link>
+            <Link href=""/>
+            <Link href=""/>
+            <Link href="http://documentation.sas.com/?softwareId=MVADOC&amp;softwareVersion=3.8_9.4&amp;softwareContextId=proc_template&amp;requestor=inapp">The TEMPLATE Procedure</Link>
+            <Link href=""/>
+            <Link href=""/>
+            <Link href="http://support.sas.com/training/tutorial/viya/index.html">SAS Tutorials</Link>
+        </Links>
+    </Registration>
+    <Metadata>
+        <!--- Define the data roles for this task. -->
+        <DataSources>
+            <DataSource name="dataSource" where="true">
+                <Roles>
+                    <Role maxVars="1" minVars="1" name="category" type="A">Category:</Role>
+                    <Role indent="1" maxVars="1" minVars="1"
+                        name="response" type="N">Variable:</Role>
+                    <Role maxVars="1" minVars="0" name="group" type="A">Subcategory:</Role>
+                    <Role maxVars="1" minVars="0" name="urlVar" type="C">URL variable:</Role>
+                </Roles>
+            </DataSource>
+        </DataSources>
+        <Options>
+            <Option inputType="string" name="dataTab">DATA</Option>
+            <Option inputType="string" name="dataGroup">DATA</Option>
+            <Option inputType="string" name="rolesGroup">ROLES</Option>
+            <Option inputType="string" name="appearanceTab">APPEARANCE</Option>
+            <Option defaultValue="0" inputType="checkbox" name="includeAsFootnote">Include filter clause as footnote</Option>
+            <!--- 'whereClause' option only used in code template.-->
+            <Option inputType="string" name="whereClause">Where clause:</Option>
+            <Option inputType="string" name="title">TITLE AND FOOTNOTE</Option>
+            <Option defaultValue="" inputType="inputtext"
+                name="titleString" width="400px">Title:</Option>
+            <Option decimalPlaces="0" defaultValue="14" increment="1"
+                indent="1" inputType="numstepper"
+                invalidMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                maxValue="24" minValue="5"
+                missingMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                name="titleSize"
+                promptMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                rangeMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                required="true" size="8em">Font size (default: 14 pt):</Option>
+            <Option defaultValue="" inputType="inputtext"
+                name="footnoteString" width="400px">Footnote:</Option>
+            <Option decimalPlaces="0" defaultValue="12" increment="1"
+                indent="1" inputType="numstepper"
+                invalidMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                maxValue="20" minValue="5"
+                missingMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                name="footnoteSize"
+                promptMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                rangeMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                required="true" size="8em">Font size (default: 12 pt):</Option>
+            <!--- measure options -->
+            <Option defaultValue="freq" inputType="combobox"
+                name="measureCombo" width="250px">Measure:</Option>
+            <Option inputType="string" name="measureChoiceFreq" returnValue="freq">Frequency count (default)</Option>
+            <Option inputType="string" name="measureChoicePercent" returnValue="pct">Frequency percent</Option>
+            <Option inputType="string" name="measureChoiceVar">Variable</Option>
+            <Option defaultValue="sum" indent="2" inputType="combobox"
+                name="statChoiceResponse" width="175px">Statistic:</Option>
+            <Option inputType="string" name="statChoiceSum" returnValue="sum">Sum (default)</Option>
+            <Option inputType="string" name="statChoiceMean" returnValue="mean">Mean</Option>
+            <Option inputType="string" name="pieOptions">PIE OPTIONS</Option>
+            <Option defaultValue="right" inputType="combobox"
+                name="startFrom" width="175px">Starting point:</Option>
+            <Option inputType="string" name="top">Top</Option>
+            <Option inputType="string" name="right">Right (default)</Option>
+            <Option inputType="string" name="bottom">Bottom</Option>
+            <Option inputType="string" name="left">Left</Option>
+            <Option defaultValue="counterclockwise" inputType="combobox"
+                name="direction" width="175px">Direction:</Option>
+            <Option inputType="string" name="counterclockwise">Counterclockwise (default)</Option>
+            <Option inputType="string" name="clockwise">Clockwise</Option>
+            <Option defaultValue="auto" inputType="combobox"
+                name="labelLoc" width="175px">Label location:</Option>
+            <Option inputType="string" name="auto">Auto (default)</Option>
+            <Option inputType="string" name="inside">Inside</Option>
+            <Option inputType="string" name="outside">Outside</Option>
+            <Option inputType="string" name="callout">Callout</Option>
+            <Option defaultValue="0" inputType="checkbox" name="setLabelSize">Set label font size</Option>
+            <Option decimalPlaces="0" defaultValue="10" increment="1"
+                indent="1" inputType="numstepper" maxValue="20"
+                minValue="5" name="labelSize" required="true" size="8em">Font size:</Option>
+            <Option defaultValue="0" inputType="combobox"
+                name="pieTrans" width="175px">Color transparency:</Option>
+            <Option inputType="string" name="pieTransDefaultChoice" returnValue="0">0% (default)</Option>
+            <Option inputType="string" name="pieTrans25Choice" returnValue="0.25">25%</Option>
+            <Option inputType="string" name="pieTrans50Choice" returnValue="0.5">50%</Option>
+            <Option inputType="string" name="pieTrans75Choice" returnValue="0.75">75%</Option>
+            <Option inputType="string" name="pieTrans100Choice" returnValue="1">100%</Option>
+            <Option inputType="string" name="pieDetails">Details</Option>
+            <Option defaultValue="none" inputType="combobox"
+                name="pieSkin" width="175px">Effect:</Option>
+            <Option inputType="string" name="none">(none)</Option>
+            <Option inputType="string" name="gloss">Gloss</Option>
+            <Option inputType="string" name="sheen">Sheen</Option>
+            <Option inputType="string" name="crisp">Crisp</Option>
+            <Option inputType="string" name="matte">Matte</Option>
+            <Option inputType="string" name="pressed">Pressed</Option>
+            <Option inputType="string" name="graphSize">GRAPH SIZE</Option>
+            <Option defaultValue="in" inputType="combobox"
+                name="dimType" width="100px">Units:</Option>
+            <Option inputType="string" name="in">Inches (default)</Option>
+            <Option inputType="string" name="cm">Cms</Option>
+            <Option inputType="string" name="px">Pixels</Option>
+            <Option decimalPlaces="0,1" defaultValue="6.4"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 2 to 12 for the width in inches"
+                maxValue="12.0" minValue="2.0"
+                missingMessage="Enter a number from 2 to 12 for the width in inches"
+                name="inchWidth"
+                promptMessage="Enter a number from 2 to 12 for the width in inches"
+                rangeMessage="Enter a number from 2 to 12 for the width in inches"
+                required="true" size="10em">Width:</Option>
+            <Option decimalPlaces="0,1" defaultValue="4.8"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 2 to 12 for the height in inches"
+                maxValue="12.0" minValue="2.0"
+                missingMessage="Enter a number from 2 to 12 for the height in inches"
+                name="inchHeight"
+                promptMessage="Enter a number from 2 to 12 for the height in inches"
+                rangeMessage="Enter a number from 2 to 12 for the height in inches"
+                required="true" size="10em">Height:</Option>
+            <Option decimalPlaces="0,1" defaultValue="16"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 5 to 30 for the width in cms"
+                maxValue="30.0" minValue="5.0"
+                missingMessage="Enter a number from 5 to 30 for the width in cms"
+                name="cmWidth"
+                promptMessage="Enter a number from 5 to 30 for the width in cms"
+                rangeMessage="Enter a number from 5 to 30 for the width in cms"
+                required="true" size="10em">Width:</Option>
+            <Option decimalPlaces="0,1" defaultValue="12"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 5 to 30 for the height in cms"
+                maxValue="30.0" minValue="5.0"
+                missingMessage="Enter a number from 5 to 30 for the height in cms"
+                name="cmHeight"
+                promptMessage="Enter a number from 5 to 30 for the height in cms"
+                rangeMessage="Enter a number from 5 to 30 for the height in cms"
+                required="true" size="10em">Height:</Option>
+            <Option decimalPlaces="0,1" defaultValue="640" increment="1"
+                inputType="numstepper"
+                invalidMessage="Enter a number from 50 to 1200 for the width in pixels"
+                maxValue="1200" minValue="50"
+                missingMessage="Enter a number from 50 to 1200 for the width in pixels"
+                name="pixelWidth"
+                promptMessage="Enter a number from 50 to 1200 for the width in pixels"
+                rangeMessage="Enter a number from 50 to 1200 for the width in pixels"
+                required="true" size="10em">Width:</Option>
+            <Option decimalPlaces="0,1" defaultValue="480" increment="1"
+                inputType="numstepper"
+                invalidMessage="Enter a number from 50 to 1200 for the height in pixels"
+                maxValue="1200" minValue="50"
+                missingMessage="Enter a number from 50 to 1200 for the height in pixels"
+                name="pixelHeight"
+                promptMessage="Enter a number from 50 to 1200 for the height in pixels"
+                rangeMessage="Enter a number from 50 to 1200 for the height in pixels"
+                required="true" size="10em">Height:</Option>
+            <!--- code comments -->
+            <Option inputType="string" name="pieTemplateMsg">Define Pie template</Option>
+        </Options>
+    </Metadata>
+    <!--- Define the task options relationships                  -->
+    <!--- The UI engine will determine the best respresentation. -->
+    <UI>
+        <Container option="dataTab">
+            <Group open="true" option="dataGroup">
+                <DataItem data="dataSource"/>
+            </Group>
+            <Group open="true" option="rolesGroup">
+                <RoleItem role="category"/>
+                <RoleItem role="group"/>
+                <OptionChoice option="measureCombo">
+                    <OptionItem option="measureChoiceFreq"/>
+                    <OptionItem option="measureChoicePercent"/>
+                    <OptionItem option="measureChoiceVar"/>
+                </OptionChoice>
+                <RoleItem role="response"/>
+                <OptionChoice option="statChoiceResponse">
+                    <OptionItem option="statChoiceSum"/>
+                    <OptionItem option="statChoiceMean"/>
+                </OptionChoice>
+            </Group>
+        </Container>
+        <Container option="appearanceTab">
+            <Group open="true" option="pieOptions">
+                <OptionChoice option="startFrom">
+                    <OptionItem option="right"/>
+                    <OptionItem option="top"/>
+                    <OptionItem option="left"/>
+                    <OptionItem option="bottom"/>
+                </OptionChoice>
+                <OptionChoice option="direction">
+                    <OptionItem option="counterclockwise"/>
+                    <OptionItem option="clockwise"/>
+                </OptionChoice>
+                <OptionChoice option="labelLoc">
+                    <OptionItem option="auto"/>
+                    <OptionItem option="inside"/>
+                    <OptionItem option="outside"/>
+                    <OptionItem option="callout"/>
+                </OptionChoice>
+                <OptionItem option="setLabelSize"/>
+                <OptionItem option="labelSize"/>
+                <Group open="false" option="pieDetails">
+                    <OptionChoice option="pieTrans">
+                        <OptionItem option="pieTransDefaultChoice"/>
+                        <OptionItem option="pieTrans25Choice"/>
+                        <OptionItem option="pieTrans50Choice"/>
+                        <OptionItem option="pieTrans75Choice"/>
+                        <OptionItem option="pieTrans100Choice"/>
+                    </OptionChoice>
+                    <OptionChoice option="pieSkin">
+                        <OptionItem option="none"/>
+                        <OptionItem option="gloss"/>
+                        <OptionItem option="sheen"/>
+                        <OptionItem option="crisp"/>
+                        <OptionItem option="matte"/>
+                        <OptionItem option="pressed"/>
+                    </OptionChoice>
+                    <RoleItem role="urlVar"/>
+                </Group>
+            </Group>
+            <Group open="false" option="title">
+                <OptionItem option="titleString"/>
+                <OptionItem option="titleSize"/>
+                <OptionItem option="footnoteString"/>
+                <OptionItem option="footnoteSize"/>
+                <OptionItem option="includeAsFootnote"/>
+            </Group>
+            <Group option="graphSize">
+                <OptionChoice option="dimType">
+                    <OptionItem option="in"/>
+                    <OptionItem option="cm"/>
+                    <OptionItem option="px"/>
+                </OptionChoice>
+                <OptionItem option="inchWidth"/>
+                <OptionItem option="inchHeight"/>
+                <OptionItem option="cmWidth"/>
+                <OptionItem option="cmHeight"/>
+                <OptionItem option="pixelWidth"/>
+                <OptionItem option="pixelHeight"/>
+            </Group>
+        </Container>
+    </UI>
+    <Dependencies>
+        <Dependency condition="($dataSource.getWhereClause()!='')">
+            <Target action="show" conditionResult="true" option="includeAsFootnote"/>
+            <Target action="hide" conditionResult="false" option="includeAsFootnote"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar')">
+            <Target action="show" conditionResult="true" option="response"/>
+            <Target action="hide" conditionResult="false" option="response"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar' &amp;&amp; $response.size()>0)">
+            <Target action="show" conditionResult="true" option="statChoiceResponse"/>
+            <Target action="hide" conditionResult="false" option="statChoiceResponse"/>
+        </Dependency>
+        <Dependency condition="($setLabelSize=='1')">
+            <Target action="show" conditionResult="true" option="labelSize"/>
+            <Target action="hide" conditionResult="false" option="labelSize"/>
+        </Dependency>
+        <Dependency condition="($group.size()>0)">
+            <Target action="disable" conditionResult="true" option="labelLoc"/>
+            <Target action="enable" conditionResult="false" option="labelLoc"/>
+        </Dependency>
+        <Dependency condition="($titleString!='')">
+            <Target action="enable" conditionResult="true" option="titleSize"/>
+            <Target action="disable" conditionResult="false" option="titleSize"/>
+        </Dependency>
+        <Dependency condition="($footnoteString!='' || ($dataSource.getWhereClause()!='' &amp;&amp; $includeAsFootnote=='1'))">
+            <Target action="enable" conditionResult="true" option="footnoteSize"/>
+            <Target action="disable" conditionResult="false" option="footnoteSize"/>
+        </Dependency>
+        <Dependency condition="($dimType=='px')">
+            <Target action="show" conditionResult="true" option="pixelWidth"/>
+            <Target action="show" conditionResult="true" option="pixelHeight"/>
+            <Target action="hide" conditionResult="true" option="inchWidth"/>
+            <Target action="hide" conditionResult="true" option="inchHeight"/>
+            <Target action="hide" conditionResult="true" option="cmWidth"/>
+            <Target action="hide" conditionResult="true" option="cmHeight"/>
+        </Dependency>
+        <Dependency condition="($dimType=='in')">
+            <Target action="hide" conditionResult="true" option="pixelWidth"/>
+            <Target action="hide" conditionResult="true" option="pixelHeight"/>
+            <Target action="show" conditionResult="true" option="inchWidth"/>
+            <Target action="show" conditionResult="true" option="inchHeight"/>
+            <Target action="hide" conditionResult="true" option="cmWidth"/>
+            <Target action="hide" conditionResult="true" option="cmHeight"/>
+        </Dependency>
+        <Dependency condition="($dimType=='cm')">
+            <Target action="hide" conditionResult="true" option="pixelWidth"/>
+            <Target action="hide" conditionResult="true" option="pixelHeight"/>
+            <Target action="hide" conditionResult="true" option="inchWidth"/>
+            <Target action="hide" conditionResult="true" option="inchHeight"/>
+            <Target action="show" conditionResult="true" option="cmWidth"/>
+            <Target action="show" conditionResult="true" option="cmHeight"/>
+        </Dependency>
+    </Dependencies>
+    <!--- Define the velocity code template. -->
+    <CodeTemplate><![CDATA[
+##--Extract first item from list--##
+#if($category.size()>0) #set($CAT=$category.get(0)) #end
+#if($response.size()>0) #set($RESP=$response.get(0)) #end
+#if($group.size()>0) #set($GRP=$group.get(0)) #end
+#if($urlVar.size()>0) #set($URL=$urlVar.get(0)) #end
+
+#if($startFrom=='top') #set($BASELINE=90) #end      
+#if($startFrom=='right') #set($BASELINE=0) #end
+#if($startFrom=='bottom') #set($BASELINE=270) #end
+#if($startFrom=='left') #set($BASELINE=180) #end
+
+##--Set Graph Size--##
+#if($dimType=="in")
+    #set($WIDTH="$inchWidth$dimType")
+    #set($HEIGHT="$inchHeight$dimType")
+#end
+
+#if($dimType=="cm")
+    #set($WIDTH="$cmWidth$dimType")
+    #set($HEIGHT="$cmHeight$dimType")
+#end
+
+#if($dimType=="px")
+    #set($WIDTH="$pixelWidth$dimType")
+    #set($HEIGHT="$pixelHeight$dimType")
+#end
+
+##--When GRP is used, set Label Location to inside--##
+#if($GRP) #set($labelLOCATION='inside')
+#else #set($labelLOCATION=$labelLoc)
+#end
+
+##--Build quoted strings for title and footnote to clean up any quotes provided by user--##
+#if($titleString!="") #set($qTitleString=$CTMUtil.doubleQuoteString($titleString)) #end
+#if($footnoteString!="") #set($qFootnoteString=$CTMUtil.doubleQuoteString($footnoteString)) #end
+
+##--Define Pie template--##
+/* $pieTemplateMsg */
+proc template;
+    define statgraph SASStudio.Pie;
+        begingraph;
+        ##--TITLE and FOOTNOTE--##
+            #if($titleString!="") entrytitle $qTitleString / textattrs=(size=$titleSize); #end
+
+            #if($dataSource.getWhereClause()!="" && $includeAsFootnote=='1') entryfootnote
+                halign=left 
+                #set($whereStr="$whereClause $dataSource.getWhereClause()") 
+                $CTMUtil.doubleQuoteString($whereStr) / textattrs=(size=$footnoteSize); 
+            #end
+
+            #if($footnoteString!="") entryfootnote halign=left $qFootnoteString / textattrs=(size=$footnoteSize); #end
+
+        layout region;
+            piechart category=$CAT
+            #if($RESP) response=$RESP #end
+            /
+            #if($GRP) group=$GRP groupgap=2% #end
+            #if($URL) url=$URL #end
+            #if($RESP)
+                #if($statChoiceResponse!='sum') stat=$statChoiceResponse #end
+            #else
+                #if($measureCombo!='freq') stat=$measureCombo #end
+            #end
+            #if($BASELINE!=0) start=$BASELINE #end
+            #if($direction!='counterclockwise') categorydirection=$direction #end
+            #if($labelLOCATION!='auto') datalabellocation=$labelLOCATION #end
+            #if($setLabelSize=='1') datalabelattrs=(size=$labelSize) #end
+            #if($pieTrans!='0') fillattrs=(transparency=$pieTrans) #end
+            #if($pieSkin!='none') dataskin=$pieSkin #end
+            ;
+        endlayout;
+        endgraph;
+    end;
+run;
+
+##--Set output size--##
+ods graphics / reset width=$WIDTH height=$HEIGHT imagemap;
+
+##--SGRENDER proc statement--##
+proc sgrender template=SASStudio.Pie data=$dataSource #if($dataSource.getWhereClause()!="")(where=($dataSource.getWhereClause())) #end;
+run;
+
+ods graphics / reset;
+
+]]></CodeTemplate>
+    <TemplateValues version="3.8"><![CDATA[
+{"whereClause":"Where clause:","auto":"Auto (default)","callout":"Callout","pieTrans25Choice":"25%","footnoteSize":"8","px":"Pixels","cmHeight":"12","none":"(none)","sasOS":"Linux LIN X64 3.10.0-1062.4.1.el7.x86_64","inside":"Inside","pieDetails":"Details","dataTab":"DATA","measureChoiceVar":"Variable","labelLoc":"auto","pixelHeight":"480","group":"json:[{\"value\":\"target\",\"type\":\"Numeric\",\"length\":8,\"format\":\"BEST12.\",\"informat\":\"BEST32.\",\"className\":\"RoleObject\"}]","crisp":"Crisp","measureChoiceFreq":"Frequency count (default)","startFrom":"top","pressed":"Pressed","in":"Inches (default)","bottom":"Bottom","dimType":"in","urlVar":"","pieTrans75Choice":"75%","statChoiceResponse":"sum","pieSkin":"pressed","left":"Left","outside":"Outside","footnoteString":"Patients with 0 and 4 major vessels tend to have heart diseases. However, patients who have a number of vessels 1 to 3 tend not to have heart diseases.","statChoiceSum":"Sum (default)","pieOptions":"PIE OPTIONS","pieTemplateMsg":"Define Pie template","appearanceTab":"APPEARANCE","pixelWidth":"640","dataSource":{"librarytable":"WORK.IMPORT"},"measureChoicePercent":"Frequency percent","titleSize":"12","title":"TITLE AND FOOTNOTE","measureCombo":"pct","counterclockwise":"Counterclockwise (default)","pieTransDefaultChoice":"0% (default)","pieTrans100Choice":"100%","inchHeight":"5","statChoiceMean":"Mean","rolesGroup":"ROLES","inchWidth":"6.5","labelSize":"10","top":"Top","setLabelSize":"1","gloss":"Gloss","titleString":"Heart Disease Distribution based on Major Vessels Total","pieTrans":"0","sheen":"Sheen","direction":"counterclockwise","graphSize":"GRAPH SIZE","clockwise":"Clockwise","cm":"Cms","right":"Right (default)","dataGroup":"DATA","pieTrans50Choice":"50%","sasVersion":"9.46","includeAsFootnote":"0","response":"","cmWidth":"16","category":"json:[{\"value\":\"ca\",\"type\":\"Numeric\",\"length\":8,\"format\":\"BEST12.\",\"informat\":\"BEST32.\",\"className\":\"RoleObject\"}]","matte":"Matte"}
+]]></TemplateValues>
+</Task>

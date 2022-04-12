@@ -1,0 +1,869 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.4">
+    <Registration>
+        <Name>Scatter Plot</Name>
+        <Description>Scatter plots show the relationships between two or three variables by revealing patterns or concentrations of data points.</Description>
+        <GUID>2820D18B-86C3-4708-94C1-35D506C15A10</GUID>
+        <Procedures>SGPLOT</Procedures>
+        <Version>3.8</Version>
+        <Links>
+            <Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.8&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+            <Link href=""/>
+            <Link href=""/>
+            <Link href="http://documentation.sas.com/?softwareId=MVADOC&amp;softwareVersion=3.8_9.4&amp;softwareContextId=proc_sgplot&amp;requestor=inapp">The SGPLOT Procedure</Link>
+            <Link href=""/>
+            <Link href=""/>
+            <Link href="http://support.sas.com/training/tutorial/viya/index.html">SAS Tutorials</Link>
+        </Links>
+    </Registration>
+    <Metadata>
+        <!--- Define the data roles for this task. -->
+        <DataSources>
+            <DataSource name="dataSource" where="true">
+                <Roles>
+                    <Role maxVars="1" minVars="1" name="xVar" type="A">X axis:</Role>
+                    <Role maxVars="1" minVars="1" name="yVar" type="A">Y axis:</Role>
+                    <Role maxVars="1" minVars="0" name="groupVar" type="A">Group:</Role>
+                    <Role maxVars="1" minVars="0" name="byVar" type="A">Group analysis by:</Role>
+                    <Role maxVars="1" minVars="0" name="labelVar" type="A">Marker label:</Role>
+                    <Role maxVars="1" minVars="0" name="urlVar" type="C">URL variable:</Role>
+                </Roles>
+            </DataSource>
+        </DataSources>
+        <Options>
+            <Option inputType="string" name="dataTab">DATA</Option>
+            <Option inputType="string" name="dataGroup">DATA</Option>
+            <Option inputType="string" name="rolesGroup">ROLES</Option>
+            <Option inputType="string" name="addRolesGroup">ADDITIONAL ROLES</Option>
+            <Option inputType="string" name="appearanceTab">APPEARANCE</Option>
+            <!--- Define the task options.-->
+            <Option defaultValue="0" inputType="checkbox" name="includeAsFootnote">Include filter clause as footnote</Option>
+            <!--- 'whereClause' option only used in code template.-->
+            <Option inputType="string" name="whereClause">Where clause:</Option>
+            <Option inputType="string" name="title">TITLE AND FOOTNOTE</Option>
+            <Option defaultValue="" inputType="inputtext"
+                name="titleString" width="400px">Title:</Option>
+            <Option decimalPlaces="0" defaultValue="14" increment="1"
+                indent="1" inputType="numstepper"
+                invalidMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                maxValue="24" minValue="5"
+                missingMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                name="titleSize"
+                promptMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                rangeMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                required="true" size="8em">Font size (default: 14 pt):</Option>
+            <Option defaultValue="" inputType="inputtext"
+                name="footnoteString" width="400px">Footnote:</Option>
+            <Option decimalPlaces="0" defaultValue="12" increment="1"
+                indent="1" inputType="numstepper"
+                invalidMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                maxValue="20" minValue="5"
+                missingMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                name="footnoteSize"
+                promptMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                rangeMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                required="true" size="8em">Font size (default: 12 pt):</Option>
+            <Option inputType="string" name="fitPlots">FIT CURVES</Option>
+            <Option defaultValue="0" inputType="checkbox" name="regression">Regression</Option>
+            <Option decimalPlaces="0" defaultValue="1" increment="1"
+                indent="1" inputType="numstepper"
+                invalidMessage="Enter an integer greater than or equal to 1 and less than or equal to 10."
+                maxValue="10" minValue="1"
+                missingMessage="Enter an integer greater than or equal to 1 and less than or equal to 10."
+                name="degreeReg"
+                promptMessage="Enter an integer greater than or equal to 1 and less than or equal to 10."
+                rangeMessage="Enter an integer greater than or equal to 1 and less than or equal to 10." required="true">Degree of the polynomial fit:</Option>
+            <Option defaultValue="confLevelNoneChoice" indent="1"
+                inputType="combobox" name="regConfLevelCombo">Prediction limits for individuals:</Option>
+            <Option inputType="string" name="confLevelNoneChoice">none (default)</Option>
+            <Option inputType="string" name="confLevel99Choice">99%</Option>
+            <Option inputType="string" name="confLevel95Choice">95%</Option>
+            <Option inputType="string" name="confLevel90Choice">90%</Option>
+            <Option defaultValue="0" inputType="checkbox" name="loess">Loess</Option>
+            <Option indent="1" inputType="string" name="loessNote">Note: Expect a considerably longer run time (read more)</Option>
+            <Option inputType="string" name="loessNoteReadMore">If the number of observations in the loess plot exceeds the default limit of 5,000, the task adds an ODS graphics option (loessmaxobs) whose value is set to the number of observations.</Option>
+            <Option defaultValue="0" indent="1" inputType="checkbox" name="loessSmooth">Specify a smoothing value</Option>
+            <Option indent="2" inputType="numbertext"
+                invalidMessage="Enter a number greater than 0 and less than or equal to 1."
+                maxValue="1" minValue="0.000000000000000000000001"
+                missingMessage="Enter a number greater than 0 and less than or equal to 1."
+                name="loessSmoothValue"
+                promptMessage="Enter a number greater than 0 and less than or equal to 1."
+                rangeMessage="Enter a number greater than 0 and less than or equal to 1."
+                required="true" width="6em">Smoothing value:</Option>
+            <Option defaultValue="confLevelNoneChoice" indent="1"
+                inputType="combobox" name="loessConfLevelCombo">Confidence limits for means:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="pbSpline">Penalized B-spline</Option>
+            <Option decimalPlaces="0" defaultValue="3" increment="1"
+                indent="1" inputType="numstepper"
+                invalidMessage="Enter an integer greater than or equal to 0 and less than or equal to 10."
+                maxValue="10" minValue="0"
+                missingMessage="Enter an integer greater than or equal to 0 and less than or equal to 10."
+                name="degreeSpline"
+                promptMessage="Enter an integer greater than or equal to 0 and less than or equal to 10."
+                rangeMessage="Enter an integer greater than or equal to 0 and less than or equal to 10." required="true">Degree of the spline transformation:</Option>
+            <Option defaultValue="confLevelNoneChoice" indent="1"
+                inputType="combobox" name="splineConfLevelCombo">Prediction limits for individuals:</Option>
+            <Option inputType="string" name="markersGroup">MARKERS</Option>
+            <Option defaultValue="0" inputType="checkbox" name="useColor">Set color</Option>
+            <Option defaultValue="#003399" indent="1" inputType="color" name="markerColor">Color</Option>
+            <Option defaultValue="auto" inputType="combobox"
+                name="markerSymbol" width="250px">Symbol:</Option>
+            <Option inputType="string" name="auto">Auto</Option>
+            <Option inputType="string" name="circle">Circle</Option>
+            <Option inputType="string" name="square">Square</Option>
+            <Option inputType="string" name="triangle">Triangle</Option>
+            <Option inputType="string" name="diamond">Diamond</Option>
+            <Option inputType="string" name="circleFilled" returnValue="circlefilled">Filled circle</Option>
+            <Option inputType="string" name="squareFilled" returnValue="squarefilled">Filled square</Option>
+            <Option inputType="string" name="triangleFilled" returnValue="trianglefilled">Filled triangle</Option>
+            <Option inputType="string" name="diamondFilled" returnValue="diamondfilled">Filled diamond</Option>
+            <Option decimalPlaces="0" defaultValue="7" increment="1"
+                inputType="numstepper"
+                invalidMessage="Enter an integer greater than or equal to 1 and less than or equal to 100."
+                maxValue="100" minValue="1"
+                missingMessage="Enter an integer greater than or equal to 1 and less than or equal to 100."
+                name="markerSize"
+                promptMessage="Enter an integer greater than or equal to 1 and less than or equal to 100."
+                rangeMessage="Enter an integer greater than or equal to 1 and less than or equal to 100."
+                required="true" size="8em">Size (default: 7 pixels):</Option>
+            <Option defaultValue="0" inputType="combobox"
+                name="plotTrans" width="175px">Color transparency:</Option>
+            <Option inputType="string" name="plotTransDefaultChoice" returnValue="0">0% (default)</Option>
+            <Option inputType="string" name="plotTrans25Choice" returnValue="0.25">25%</Option>
+            <Option inputType="string" name="plotTrans50Choice" returnValue="0.5">50%</Option>
+            <Option inputType="string" name="plotTrans75Choice" returnValue="0.75">75%</Option>
+            <Option inputType="string" name="plotTrans100Choice" returnValue="1">100%</Option>
+            <Option inputType="string" name="markerDetails">Details</Option>
+            <Option decimalPlaces="0" defaultValue="7" increment="1"
+                indent="1" inputType="numstepper"
+                invalidMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                maxValue="20" minValue="5"
+                missingMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                name="markerLabelSize"
+                promptMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                rangeMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                required="true" size="8em">Font size (default: 7 pixels):</Option>
+            <Option inputType="string" name="xAxis">X AXIS</Option>
+            <Option defaultValue="1" inputType="checkbox" name="showXGrid">Show grid lines</Option>
+            <Option defaultValue="defaultLabel" inputType="combobox" name="displayXLabel">Display label:</Option>
+            <Option inputType="string" name="defaultLabel">Default label</Option>
+            <Option inputType="string" name="noLabel">No label</Option>
+            <Option inputType="string" name="customLabel">Custom label</Option>
+            <Option defaultValue="" indent="1" inputType="inputtext"
+                name="xLabel" required="true" width="300px">Label:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="logXAxis">Use logarithmic scale</Option>
+            <Option defaultValue="10" indent="1" inputType="combobox" name="logBaseComboX">Base value:</Option>
+            <Option inputType="string" name="logBase2" returnValue="2">2</Option>
+            <Option inputType="string" name="logBase10" returnValue="10">10 (default)</Option>
+            <Option inputType="string" name="logBaseE" returnValue="e">e</Option>
+            <Option defaultValue="0" inputType="checkbox" name="labelRotation">Rotate labels in case of tick collisions</Option>
+            <Option defaultValue="1" indent="1" inputType="radio"
+                name="diagonalRotation" variable="tickRotate">Rotate by 45 degrees</Option>
+            <Option indent="1" inputType="radio" name="verticalRotation" variable="tickRotate">Rotate by 90 degrees</Option>
+            <Option defaultValue="0" inputType="checkbox" name="xRefLine">Create a reference line</Option>
+            <Option indent="1" inputType="distinct" name="xRefLineLevel"
+                required="true" selectMessage="Select a reference value" source="xVar">Reference value:</Option>
+            <Option defaultValue="0" indent="1" inputType="combobox"
+                name="xRefLineOffset" width="175px">Line offset:</Option>
+            <Option inputType="string"
+                name="xRefLineOffsetDefaultChoice" returnValue="0">0 (default)</Option>
+            <Option inputType="string"
+                name="xRefLineOffsetNegative50Choice" returnValue="-0.5">-0.5</Option>
+            <Option inputType="string"
+                name="xRefLineOffsetNegative25Choice" returnValue="-0.25">-0.25</Option>
+            <Option inputType="string" name="xRefLineOffset25Choice" returnValue="0.25">0.25</Option>
+            <Option inputType="string" name="xRefLineOffset50Choice" returnValue="0.5">0.5</Option>
+            <Option indent="1" inputType="numbertext"
+                invalidMessage="Enter a number."
+                missingMessage="Enter a number." name="xRefLineValue"
+                promptMessage="Enter a number."
+                rangeMessage="Enter a number." required="true" width="6em">Reference value:</Option>
+            <Option defaultValue="1" indent="1" inputType="radio"
+                name="xRefValue" variable="xRefLabel">Reference value as label</Option>
+            <Option indent="1" inputType="radio" name="xRefCustom" variable="xRefLabel">Custom label</Option>
+            <Option defaultValue="" indent="2" inputType="inputtext"
+                name="xRefCustomLabel" required="true" width="300px">Label:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="xAxisMin">Specify minimum value</Option>
+            <Option indent="1" inputType="numbertext"
+                invalidMessage="Enter a number."
+                missingMessage="Enter a number." name="xAxisMinValue"
+                promptMessage="Enter a number."
+                rangeMessage="Enter a number." required="true" width="6em">Minimum value:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="xAxisMax">Specify maximum value</Option>
+            <Option indent="1" inputType="numbertext"
+                invalidMessage="Enter a number."
+                missingMessage="Enter a number." name="xAxisMaxValue"
+                promptMessage="Enter a number."
+                rangeMessage="Enter a number." required="true" width="6em">Maximum value:</Option>
+            <Option inputType="string" name="yAxis">Y AXIS</Option>
+            <Option defaultValue="1" inputType="checkbox" name="showYGrid">Show grid lines</Option>
+            <Option defaultValue="defaultLabel" inputType="combobox" name="displayYLabel">Display label:</Option>
+            <Option defaultValue="" indent="1" inputType="inputtext"
+                name="yLabel" required="true" width="300px">Label:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="logYAxis">Use logarithmic scale</Option>
+            <Option defaultValue="10" indent="1" inputType="combobox" name="logBaseComboY">Base value:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="yRefLine">Create a reference line</Option>
+            <Option indent="1" inputType="distinct" name="yRefLineLevel"
+                required="true" selectMessage="Select a reference value" source="yVar">Reference value:</Option>
+            <Option defaultValue="0" indent="1" inputType="combobox"
+                name="yRefLineOffset" width="175px">Line offset:</Option>
+            <Option inputType="string"
+                name="yRefLineOffsetDefaultChoice" returnValue="0">0 (default)</Option>
+            <Option inputType="string"
+                name="yRefLineOffsetNegative50Choice" returnValue="-0.5">-0.5</Option>
+            <Option inputType="string"
+                name="yRefLineOffsetNegative25Choice" returnValue="-0.25">-0.25</Option>
+            <Option inputType="string" name="yRefLineOffset25Choice" returnValue="0.25">0.25</Option>
+            <Option inputType="string" name="yRefLineOffset50Choice" returnValue="0.5">0.5</Option>
+            <Option indent="1" inputType="numbertext"
+                invalidMessage="Enter a number."
+                missingMessage="Enter a number." name="yRefLineValue"
+                promptMessage="Enter a number."
+                rangeMessage="Enter a number." required="true" width="6em">Reference value:</Option>
+            <Option defaultValue="1" indent="1" inputType="radio"
+                name="yRefValue" variable="yRefLabel">Reference value as label</Option>
+            <Option indent="1" inputType="radio" name="yRefCustom" variable="yRefLabel">Custom label</Option>
+            <Option defaultValue="" indent="2" inputType="inputtext"
+                name="yRefCustomLabel" required="true" width="300px">Label:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="yAxisMin">Specify minimum value</Option>
+            <Option indent="1" inputType="numbertext"
+                invalidMessage="Enter a number."
+                missingMessage="Enter a number." name="yAxisMinValue"
+                promptMessage="Enter a number."
+                rangeMessage="Enter a number." required="true" width="6em">Minimum value:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="yAxisMax">Specify maximum value</Option>
+            <Option indent="1" inputType="numbertext"
+                invalidMessage="Enter a number."
+                missingMessage="Enter a number." name="yAxisMaxValue"
+                promptMessage="Enter a number."
+                rangeMessage="Enter a number." required="true" width="6em">Maximum value:</Option>
+            <Option defaultValue="outside" indent="1"
+                inputType="combobox" name="legendLoc" width="160px">Legend location:</Option>
+            <Option inputType="string" name="outside">Outside (default)</Option>
+            <Option inputType="string" name="inside">Inside</Option>
+            <Option inputType="string" name="graphSize">GRAPH SIZE</Option>
+            <Option defaultValue="in" inputType="combobox"
+                name="dimType" width="100px">Units:</Option>
+            <Option inputType="string" name="in">Inches (default)</Option>
+            <Option inputType="string" name="cm">Cms</Option>
+            <Option inputType="string" name="px">Pixels</Option>
+            <Option decimalPlaces="0,1" defaultValue="6.4"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 2 to 12 for the width in inches"
+                maxValue="12.0" minValue="2.0"
+                missingMessage="Enter a number from 2 to 12 for the width in inches"
+                name="inchWidth"
+                promptMessage="Enter a number from 2 to 12 for the width in inches"
+                rangeMessage="Enter a number from 2 to 12 for the width in inches"
+                required="true" size="10em">Width:</Option>
+            <Option decimalPlaces="0,1" defaultValue="4.8"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 2 to 12 for the height in inches"
+                maxValue="12.0" minValue="2.0"
+                missingMessage="Enter a number from 2 to 12 for the height in inches"
+                name="inchHeight"
+                promptMessage="Enter a number from 2 to 12 for the height in inches"
+                rangeMessage="Enter a number from 2 to 12 for the height in inches"
+                required="true" size="10em">Height:</Option>
+            <Option decimalPlaces="0,1" defaultValue="16"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 5 to 30 for the width in cms"
+                maxValue="30.0" minValue="5.0"
+                missingMessage="Enter a number from 5 to 30 for the width in cms"
+                name="cmWidth"
+                promptMessage="Enter a number from 5 to 30 for the width in cms"
+                rangeMessage="Enter a number from 5 to 30 for the width in cms"
+                required="true" size="10em">Width:</Option>
+            <Option decimalPlaces="0,1" defaultValue="12"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 5 to 30 for the height in cms"
+                maxValue="30.0" minValue="5.0"
+                missingMessage="Enter a number from 5 to 30 for the height in cms"
+                name="cmHeight"
+                promptMessage="Enter a number from 5 to 30 for the height in cms"
+                rangeMessage="Enter a number from 5 to 30 for the height in cms"
+                required="true" size="10em">Height:</Option>
+            <Option decimalPlaces="0,1" defaultValue="640" increment="1"
+                inputType="numstepper"
+                invalidMessage="Enter a number from 50 to 1200 for the width in pixels"
+                maxValue="1200" minValue="50"
+                missingMessage="Enter a number from 50 to 1200 for the width in pixels"
+                name="pixelWidth"
+                promptMessage="Enter a number from 50 to 1200 for the width in pixels"
+                rangeMessage="Enter a number from 50 to 1200 for the width in pixels"
+                required="true" size="10em">Width:</Option>
+            <Option decimalPlaces="0,1" defaultValue="480" increment="1"
+                inputType="numstepper"
+                invalidMessage="Enter a number from 50 to 1200 for the height in pixels"
+                maxValue="1200" minValue="50"
+                missingMessage="Enter a number from 50 to 1200 for the height in pixels"
+                name="pixelHeight"
+                promptMessage="Enter a number from 50 to 1200 for the height in pixels"
+                rangeMessage="Enter a number from 50 to 1200 for the height in pixels"
+                required="true" size="10em">Height:</Option>
+        </Options>
+    </Metadata>
+    <!--- Define the task options relationships                  -->
+    <!--- The UI engine will determine the best respresentation. -->
+    <UI>
+        <Container option="dataTab">
+            <Group open="true" option="dataGroup">
+                <DataItem data="dataSource"/>
+            </Group>
+            <Group open="true" option="rolesGroup">
+                <RoleItem role="xVar"/>
+                <RoleItem role="yVar"/>
+                <RoleItem role="groupVar"/>
+                <OptionChoice option="legendLoc">
+                    <OptionItem option="outside"/>
+                    <OptionItem option="inside"/>
+                </OptionChoice>
+            </Group>
+            <Group open="false" option="addRolesGroup">
+                <RoleItem role="byVar"/>
+            </Group>
+        </Container>
+        <Container option="appearanceTab">
+            <Group open="true" option="fitPlots">
+                <OptionItem option="regression"/>
+                <OptionItem option="degreeReg"/>
+                <OptionChoice option="regConfLevelCombo">
+                    <OptionItem option="confLevelNoneChoice"/>
+                    <OptionItem option="confLevel90Choice"/>
+                    <OptionItem option="confLevel95Choice"/>
+                    <OptionItem option="confLevel99Choice"/>
+                </OptionChoice>
+                <OptionItem option="loess"/>
+                <Group open="false" option="loessNote">
+                    <OptionItem option="loessNoteReadMore"/>
+                </Group>
+                <OptionItem option="loessSmooth"/>
+                <OptionItem option="loessSmoothValue"/>
+                <OptionChoice option="loessConfLevelCombo">
+                    <OptionItem option="confLevelNoneChoice"/>
+                    <OptionItem option="confLevel90Choice"/>
+                    <OptionItem option="confLevel95Choice"/>
+                    <OptionItem option="confLevel99Choice"/>
+                </OptionChoice>
+                <OptionItem option="pbSpline"/>
+                <OptionItem option="degreeSpline"/>
+                <OptionChoice option="splineConfLevelCombo">
+                    <OptionItem option="confLevelNoneChoice"/>
+                    <OptionItem option="confLevel90Choice"/>
+                    <OptionItem option="confLevel95Choice"/>
+                    <OptionItem option="confLevel99Choice"/>
+                </OptionChoice>
+            </Group>
+            <Group open="false" option="markersGroup">
+                <RoleItem role="labelVar"/>
+                <OptionItem option="markerLabelSize"/>
+                <OptionItem option="useColor"/>
+                <OptionItem option="markerColor"/>
+                <OptionChoice option="markerSymbol">
+                    <OptionItem option="auto"/>
+                    <OptionItem option="circle"/>
+                    <OptionItem option="square"/>
+                    <OptionItem option="triangle"/>
+                    <OptionItem option="diamond"/>
+                    <OptionItem option="circleFilled"/>
+                    <OptionItem option="squareFilled"/>
+                    <OptionItem option="triangleFilled"/>
+                    <OptionItem option="diamondFilled"/>
+                </OptionChoice>
+                <OptionItem option="markerSize"/>
+                <OptionChoice option="plotTrans">
+                    <OptionItem option="plotTransDefaultChoice"/>
+                    <OptionItem option="plotTrans25Choice"/>
+                    <OptionItem option="plotTrans50Choice"/>
+                    <OptionItem option="plotTrans75Choice"/>
+                    <OptionItem option="plotTrans100Choice"/>
+                </OptionChoice>
+                <Group open="false" option="markerDetails">
+                    <RoleItem role="urlVar"/>
+                </Group>
+            </Group>
+            <Group open="false" option="xAxis">
+                <OptionItem option="xAxisMin"/>
+                <OptionItem option="xAxisMinValue"/>
+                <OptionItem option="xAxisMax"/>
+                <OptionItem option="xAxisMaxValue"/>
+                <OptionItem option="showXGrid"/>
+                <OptionChoice option="displayXLabel">
+                    <OptionItem option="defaultLabel"/>
+                    <OptionItem option="noLabel"/>
+                    <OptionItem option="customLabel"/>
+                </OptionChoice>
+                <OptionItem option="xLabel"/>
+                <OptionItem option="logXAxis"/>
+                <OptionChoice option="logBaseComboX">
+                    <OptionItem option="logBase10"/>
+                    <OptionItem option="logBase2"/>
+                    <OptionItem option="logBaseE"/>
+                </OptionChoice>
+                <OptionItem option="labelRotation"/>
+                <OptionItem option="diagonalRotation"/>
+                <OptionItem option="verticalRotation"/>
+                <OptionItem option="xRefLine"/>
+                <OptionItem option="xRefLineLevel"/>
+                <OptionChoice option="xRefLineOffset">
+                    <OptionItem option="xRefLineOffsetNegative50Choice"/>
+                    <OptionItem option="xRefLineOffsetNegative25Choice"/>
+                    <OptionItem option="xRefLineOffsetDefaultChoice"/>
+                    <OptionItem option="xRefLineOffset25Choice"/>
+                    <OptionItem option="xRefLineOffset50Choice"/>
+                </OptionChoice>
+                <OptionItem option="xRefLineValue"/>
+                <OptionItem option="xRefValue"/>
+                <OptionItem option="xRefCustom"/>
+                <OptionItem option="xRefCustomLabel"/>
+            </Group>
+            <Group open="false" option="yAxis">
+                <OptionItem option="yAxisMin"/>
+                <OptionItem option="yAxisMinValue"/>
+                <OptionItem option="yAxisMax"/>
+                <OptionItem option="yAxisMaxValue"/>
+                <OptionItem option="showYGrid"/>
+                <OptionChoice option="displayYLabel">
+                    <OptionItem option="defaultLabel"/>
+                    <OptionItem option="noLabel"/>
+                    <OptionItem option="customLabel"/>
+                </OptionChoice>
+                <OptionItem option="yLabel"/>
+                <OptionItem option="logYAxis"/>
+                <OptionChoice option="logBaseComboY">
+                    <OptionItem option="logBase10"/>
+                    <OptionItem option="logBase2"/>
+                    <OptionItem option="logBaseE"/>
+                </OptionChoice>
+                <OptionItem option="yRefLine"/>
+                <OptionItem option="yRefLineLevel"/>
+                <OptionChoice option="yRefLineOffset">
+                    <OptionItem option="yRefLineOffsetNegative50Choice"/>
+                    <OptionItem option="yRefLineOffsetNegative25Choice"/>
+                    <OptionItem option="yRefLineOffsetDefaultChoice"/>
+                    <OptionItem option="yRefLineOffset25Choice"/>
+                    <OptionItem option="yRefLineOffset50Choice"/>
+                </OptionChoice>
+                <OptionItem option="yRefLineValue"/>
+                <OptionItem option="yRefValue"/>
+                <OptionItem option="yRefCustom"/>
+                <OptionItem option="yRefCustomLabel"/>
+            </Group>
+            <Group open="false" option="title">
+                <OptionItem option="titleString"/>
+                <OptionItem option="titleSize"/>
+                <OptionItem option="footnoteString"/>
+                <OptionItem option="footnoteSize"/>
+                <OptionItem option="includeAsFootnote"/>
+            </Group>
+            <Group option="graphSize">
+                <OptionChoice option="dimType">
+                    <OptionItem option="in"/>
+                    <OptionItem option="cm"/>
+                    <OptionItem option="px"/>
+                </OptionChoice>
+                <OptionItem option="inchWidth"/>
+                <OptionItem option="inchHeight"/>
+                <OptionItem option="cmWidth"/>
+                <OptionItem option="cmHeight"/>
+                <OptionItem option="pixelWidth"/>
+                <OptionItem option="pixelHeight"/>
+            </Group>
+        </Container>
+    </UI>
+    <Dependencies>
+        <Dependency condition="($dataSource.getWhereClause()!='')">
+            <Target action="show" conditionResult="true" option="includeAsFootnote"/>
+            <Target action="hide" conditionResult="false" option="includeAsFootnote"/>
+        </Dependency>
+        <Dependency condition="($groupVar.size()>0)">
+            <Target action="disable" conditionResult="true" option="useColor"/>
+            <Target action="enable" conditionResult="false" option="useColor"/>
+        </Dependency>
+        <Dependency condition="($useColor=='1')">
+            <Target action="show" conditionResult="true" option="markerColor"/>
+            <Target action="hide" conditionResult="false" option="markerColor"/>
+        </Dependency>
+        <Dependency condition="($groupVar.size()>0)">
+            <Target action="show" conditionResult="true" option="legendLoc"/>
+            <Target action="hide" conditionResult="false" option="legendLoc"/>
+        </Dependency>
+        <Dependency condition="($labelVar.size()>0)">
+            <Target action="show" conditionResult="true" option="markerLabelSize"/>
+            <Target action="hide" conditionResult="false" option="markerLabelSize"/>
+        </Dependency>
+        <Dependency condition="($titleString!='')">
+            <Target action="enable" conditionResult="true" option="titleSize"/>
+            <Target action="disable" conditionResult="false" option="titleSize"/>
+        </Dependency>
+        <Dependency condition="($footnoteString!='' || ($dataSource.getWhereClause()!='' &amp;&amp; $includeAsFootnote=='1'))">
+            <Target action="enable" conditionResult="true" option="footnoteSize"/>
+            <Target action="disable" conditionResult="false" option="footnoteSize"/>
+        </Dependency>
+        <Dependency condition="($xVar.size()>0 &amp;&amp; $xVar[0].get('type')=='Char')">
+            <Target action="disable" conditionResult="true" option="xAxisMin"/>
+            <Target action="enable" conditionResult="false" option="xAxisMin"/>
+            <Target action="disable" conditionResult="true" option="xAxisMax"/>
+            <Target action="enable" conditionResult="false" option="xAxisMax"/>
+        </Dependency>
+        <Dependency condition="($xAxisMin &amp;&amp; $xAxisMin=='1')">
+            <Target action="show" conditionResult="true" option="xAxisMinValue"/>
+            <Target action="hide" conditionResult="false" option="xAxisMinValue"/>
+        </Dependency>
+        <Dependency condition="($xAxisMax &amp;&amp; $xAxisMax=='1')">
+            <Target action="show" conditionResult="true" option="xAxisMaxValue"/>
+            <Target action="hide" conditionResult="false" option="xAxisMaxValue"/>
+        </Dependency>
+        <Dependency condition="($yVar.size()>0 &amp;&amp; $yVar[0].get('type')=='Char')">
+            <Target action="disable" conditionResult="true" option="yAxisMin"/>
+            <Target action="enable" conditionResult="false" option="yAxisMin"/>
+            <Target action="disable" conditionResult="true" option="yAxisMax"/>
+            <Target action="enable" conditionResult="false" option="yAxisMax"/>
+        </Dependency>
+        <Dependency condition="($yAxisMin &amp;&amp; $yAxisMin=='1')">
+            <Target action="show" conditionResult="true" option="yAxisMinValue"/>
+            <Target action="hide" conditionResult="false" option="yAxisMinValue"/>
+        </Dependency>
+        <Dependency condition="($yAxisMax &amp;&amp; $yAxisMax=='1')">
+            <Target action="show" conditionResult="true" option="yAxisMaxValue"/>
+            <Target action="hide" conditionResult="false" option="yAxisMaxValue"/>
+        </Dependency>
+        <Dependency condition="($displayXLabel=='customLabel')">
+            <Target action="show" conditionResult="true" option="xLabel"/>
+            <Target action="hide" conditionResult="false" option="xLabel"/>
+        </Dependency>
+        <Dependency condition="($displayYLabel=='customLabel')">
+            <Target action="show" conditionResult="true" option="yLabel"/>
+            <Target action="hide" conditionResult="false" option="yLabel"/>
+        </Dependency>
+        <Dependency condition="(($xVar.size()>0 &amp;&amp; $xVar.get(0).get('type')=='Numeric') &amp;&amp;              ($yVar.size()>0 &amp;&amp; $yVar.get(0).get('type')=='Numeric'))">
+            <Target action="enable" conditionResult="true" option="regression"/>
+            <Target action="disable" conditionResult="false" option="regression"/>
+            <Target action="enable" conditionResult="true" option="pbSpline"/>
+            <Target action="disable" conditionResult="false" option="pbSpline"/>
+            <Target action="enable" conditionResult="true" option="loess"/>
+            <Target action="disable" conditionResult="false" option="loess"/>
+        </Dependency>
+        <Dependency condition="($xVar.size()>0 &amp;&amp; $xVar.get(0).get('type')=='Numeric') &amp;&amp;              ($yVar.size()>0 &amp;&amp; $yVar.get(0).get('type')=='Numeric') &amp;&amp; $regression=='1'">
+            <Target action="show" conditionResult="true" option="degreeReg"/>
+            <Target action="hide" conditionResult="false" option="degreeReg"/>
+            <Target action="show" conditionResult="true" option="regConfLevelCombo"/>
+            <Target action="hide" conditionResult="false" option="regConfLevelCombo"/>
+        </Dependency>
+        <Dependency condition="(($xVar.size()>0 &amp;&amp; $xVar.get(0).get('type')=='Numeric') &amp;&amp;              ($yVar.size()>0 &amp;&amp; $yVar.get(0).get('type')=='Numeric') &amp;&amp; $loess=='1')">
+            <Target action="show" conditionResult="true" option="loessNote"/>
+            <Target action="hide" conditionResult="false" option="loessNote"/>
+            <Target action="show" conditionResult="true" option="loessSmooth"/>
+            <Target action="hide" conditionResult="false" option="loessSmooth"/>
+            <Target action="show" conditionResult="true" option="loessConfLevelCombo"/>
+            <Target action="hide" conditionResult="false" option="loessConfLevelCombo"/>
+        </Dependency>
+        <Dependency condition="(($xVar.size()>0 &amp;&amp; $xVar.get(0).get('type')=='Numeric') &amp;&amp;              ($yVar.size()>0 &amp;&amp; $yVar.get(0).get('type')=='Numeric') &amp;&amp; $loess=='1' &amp;&amp; $loessSmooth=='1')">
+            <Target action="show" conditionResult="true" option="loessSmoothValue"/>
+            <Target action="hide" conditionResult="false" option="loessSmoothValue"/>
+        </Dependency>
+        <Dependency condition="(($xVar.size()>0 &amp;&amp; $xVar.get(0).get('type')=='Numeric') &amp;&amp;              ($yVar.size()>0 &amp;&amp; $yVar.get(0).get('type')=='Numeric') &amp;&amp; $pbSpline=='1')">
+            <Target action="show" conditionResult="true" option="degreeSpline"/>
+            <Target action="hide" conditionResult="false" option="degreeSpline"/>
+            <Target action="show" conditionResult="true" option="splineConfLevelCombo"/>
+            <Target action="hide" conditionResult="false" option="splineConfLevelCombo"/>
+        </Dependency>
+        <Dependency condition="($xVar.size()>0 &amp;&amp; $xVar[0].get('type')=='Char')">
+            <Target action="disable" conditionResult="true" option="logXAxis"/>
+            <Target action="enable" conditionResult="false" option="logXAxis"/>
+        </Dependency>
+        <Dependency condition="($logXAxis &amp;&amp; $logXAxis=='1')">
+            <Target action="show" conditionResult="true" option="logBaseComboX"/>
+            <Target action="hide" conditionResult="false" option="logBaseComboX"/>
+        </Dependency>
+        <Dependency condition="($yVar.size()>0 &amp;&amp; $yVar[0].get('type')=='Char')">
+            <Target action="disable" conditionResult="true" option="logYAxis"/>
+            <Target action="enable" conditionResult="false" option="logYAxis"/>
+        </Dependency>
+        <Dependency condition="($logYAxis &amp;&amp; $logYAxis=='1')">
+            <Target action="show" conditionResult="true" option="logBaseComboY"/>
+            <Target action="hide" conditionResult="false" option="logBaseComboY"/>
+        </Dependency>
+        <Dependency condition="($labelRotation=='1')">
+            <Target action="show" conditionResult="true" option="tickRotate"/>
+            <Target action="hide" conditionResult="false" option="tickRotate"/>
+        </Dependency>
+        <Dependency condition="($xVar.size()>0 &amp;&amp; $xRefLine=='1')">
+            <Target action="show" conditionResult="true" option="xRefLabel"/>
+            <Target action="hide" conditionResult="false" option="xRefLabel"/>
+        </Dependency>
+        <Dependency condition="($xVar.size()>0 &amp;&amp; $xRefLine=='1' &amp;&amp; $xRefLabel=='xRefCustom')">
+            <Target action="show" conditionResult="true" option="xRefCustomLabel"/>
+            <Target action="hide" conditionResult="false" option="xRefCustomLabel"/>
+        </Dependency>
+        <Dependency condition="($xVar.size()>0 &amp;&amp; $xVar[0].get('type')=='Char' &amp;&amp; $xRefLine=='1')">
+            <Target action="show" conditionResult="true" option="xRefLineLevel"/>
+            <Target action="hide" conditionResult="false" option="xRefLineLevel"/>
+            <Target action="show" conditionResult="true" option="xRefLineOffset"/>
+            <Target action="hide" conditionResult="false" option="xRefLineOffset"/>
+        </Dependency>
+        <Dependency condition="($xVar.size()>0 &amp;&amp; $xVar[0].get('type')=='Numeric' &amp;&amp; $xRefLine=='1')">
+            <Target action="show" conditionResult="true" option="xRefLineValue"/>
+            <Target action="hide" conditionResult="false" option="xRefLineValue"/>
+        </Dependency>
+        <Dependency condition="($yVar.size()>0 &amp;&amp; $yRefLine=='1')">
+            <Target action="show" conditionResult="true" option="yRefLabel"/>
+            <Target action="hide" conditionResult="false" option="yRefLabel"/>
+        </Dependency>
+        <Dependency condition="($yVar.size()>0 &amp;&amp; $yRefLine=='1' &amp;&amp; $yRefLabel=='yRefCustom')">
+            <Target action="show" conditionResult="true" option="yRefCustomLabel"/>
+            <Target action="hide" conditionResult="false" option="yRefCustomLabel"/>
+        </Dependency>
+        <Dependency condition="($yVar.size()>0 &amp;&amp; $yVar[0].get('type')=='Char' &amp;&amp; $yRefLine=='1')">
+            <Target action="show" conditionResult="true" option="yRefLineLevel"/>
+            <Target action="hide" conditionResult="false" option="yRefLineLevel"/>
+            <Target action="show" conditionResult="true" option="yRefLineOffset"/>
+            <Target action="hide" conditionResult="false" option="yRefLineOffset"/>
+        </Dependency>
+        <Dependency condition="($yVar.size()>0 &amp;&amp; $yVar[0].get('type')=='Numeric' &amp;&amp; $yRefLine=='1')">
+            <Target action="show" conditionResult="true" option="yRefLineValue"/>
+            <Target action="hide" conditionResult="false" option="yRefLineValue"/>
+        </Dependency>
+        <Dependency condition="($dimType=='px')">
+            <Target action="show" conditionResult="true" option="pixelWidth"/>
+            <Target action="show" conditionResult="true" option="pixelHeight"/>
+            <Target action="hide" conditionResult="true" option="inchWidth"/>
+            <Target action="hide" conditionResult="true" option="inchHeight"/>
+            <Target action="hide" conditionResult="true" option="cmWidth"/>
+            <Target action="hide" conditionResult="true" option="cmHeight"/>
+        </Dependency>
+        <Dependency condition="($dimType=='in')">
+            <Target action="hide" conditionResult="true" option="pixelWidth"/>
+            <Target action="hide" conditionResult="true" option="pixelHeight"/>
+            <Target action="show" conditionResult="true" option="inchWidth"/>
+            <Target action="show" conditionResult="true" option="inchHeight"/>
+            <Target action="hide" conditionResult="true" option="cmWidth"/>
+            <Target action="hide" conditionResult="true" option="cmHeight"/>
+        </Dependency>
+        <Dependency condition="($dimType=='cm')">
+            <Target action="hide" conditionResult="true" option="pixelWidth"/>
+            <Target action="hide" conditionResult="true" option="pixelHeight"/>
+            <Target action="hide" conditionResult="true" option="inchWidth"/>
+            <Target action="hide" conditionResult="true" option="inchHeight"/>
+            <Target action="show" conditionResult="true" option="cmWidth"/>
+            <Target action="show" conditionResult="true" option="cmHeight"/>
+        </Dependency>
+    </Dependencies>
+    <Requirements>
+        <Requirement condition="(!($xAxisMin=='1' &amp;&amp; $xAxisMax=='1' &amp;&amp; ($MathTool.toDouble($xAxisMinValue) > $MathTool.toDouble($xAxisMaxValue))))">
+            <Message nlsKey="xAxisMinMaxMsgKey">The maximum value of x axis should be greater than or equal to the minimum value of x axis.</Message>
+        </Requirement>
+        <Requirement condition="(!($yAxisMin=='1' &amp;&amp; $yAxisMax=='1' &amp;&amp; ($MathTool.toDouble($yAxisMinValue) > $MathTool.toDouble($yAxisMaxValue))))">
+            <Message nlsKey="yAxisMinMaxMsgKey">The maximum value of y axis should be greater than or equal to the minimum value of y axis.</Message>
+        </Requirement>
+        <Requirement condition="(!((($logXAxis &amp;&amp; $logXAxis=='1') || ($logYAxis &amp;&amp; $logYAxis=='1')) &amp;&amp;              ($regression &amp;&amp; $regression=='1' &amp;&amp; $degreeReg=='1')))">
+            <Message nlsKey="logAxisLinearRegMsgKey">Logarithmic axes cannot be used with linear regression fits.</Message>
+        </Requirement>
+    </Requirements>
+    <!--- Define the velocity code template. -->
+    <CodeTemplate><![CDATA[
+#if($markerSymbol!='auto' || $useColor=='1' || ($markerSize && $markerSize!='7')) #set($SETATTRS='Yes')
+#else #set($SETATTRS='No')
+#end
+
+##--Extract first item from list--##
+#if($xVar.size()>0) #set($X=$xVar.get(0)) #end
+#if($yVar.size()>0) #set($Y=$yVar.get(0)) #end
+#if($groupVar.size()>0) #set($GRP=$groupVar.get(0)) #end
+#if($byVar.size()>0) #set($BY=$byVar.get(0)) #end
+#if($labelVar.size()>0) #set($LBL=$labelVar.get(0)) #end
+#if($urlVar.size()>0) #set($URL=$urlVar.get(0)) #end
+
+##--Set Graph Size--##
+#if($dimType=="in")
+    #set($WIDTH="$inchWidth$dimType")
+    #set($HEIGHT="$inchHeight$dimType")
+#end
+
+#if($dimType=="cm")
+    #set($WIDTH="$cmWidth$dimType")
+    #set($HEIGHT="$cmHeight$dimType")
+#end
+
+#if($dimType=="px")
+    #set($WIDTH="$pixelWidth$dimType")
+    #set($HEIGHT="$pixelHeight$dimType")
+#end
+
+##--Set output size and loessmaxobs--##
+ods graphics / reset width=$WIDTH height=$HEIGHT #if($loess=='1' && $dataSource.getRowsCount()>5000) loessmaxobs=$dataSource.getRowsCount() #end imagemap;
+
+#if($BY)
+##--Sort data by BY variable--##
+proc sort data=$dataSource out=_ScatterTaskData;
+    by $BY;
+run;
+#end
+
+##--SGPLOT proc statement--##
+proc sgplot data=#if($BY) _ScatterTaskData #else $dataSource #end#if($dataSource.getWhereClause()!="")(where=($dataSource.getWhereClause())) #end;
+  
+#if($BY)
+##--BY Variable--##
+    by $BY;
+#end
+
+##--Build quoted strings for title and footnote to clean up any quotes provided by user--##
+#if($titleString!="") #set($qTitleString=$CTMUtil.doubleQuoteString($titleString)) #end
+#if($footnoteString!="") #set($qFootnoteString=$CTMUtil.doubleQuoteString($footnoteString)) #end
+
+##--TITLE and FOOTNOTE--##
+#set($pt="pt")
+#if($titleString!="") 
+    #set($titleSizePt="$titleSize$pt")
+    title height=$titleSizePt $qTitleString;
+#end
+#if($footnoteString!="" || ($dataSource.getWhereClause()!="" && $includeAsFootnote=='1'))
+    #set($footSizePt="$footnoteSize$pt")
+    #if($dataSource.getWhereClause()!="" && $includeAsFootnote=='1') footnote justify=left height=$footSizePt
+        #set($whereStr="$whereClause $dataSource.getWhereClause()") $CTMUtil.doubleQuoteString($whereStr);
+    #end
+
+    #if($footnoteString!="")
+        footnote2 justify=left height=$footSizePt $qFootnoteString;
+    #end
+#end
+
+##--Fit plot settings--##
+#if($regression=='1')
+    reg x=$X y=$Y / nomarkers
+    #if($GRP) group=$GRP #end
+    #if($degreeReg!='1') degree=$degreeReg #end
+    #if($regConfLevelCombo!="confLevelNoneChoice") 
+        cli
+        #if($regConfLevelCombo=="confLevel90Choice") alpha=0.10
+        #elseif($regConfLevelCombo=="confLevel95Choice") alpha=0.05
+        #else alpha=0.01
+        #end
+    #end;
+#end
+
+#if($loess=='1')
+    loess x=$X y=$Y / nomarkers
+    #if($GRP) group=$GRP #end
+    #if($loessSmooth=='1') smooth=$loessSmoothValue #end
+    #if($loessConfLevelCombo!="confLevelNoneChoice") 
+        clm 
+        #if($loessConfLevelCombo=="confLevel90Choice") alpha=0.10
+        #elseif($loessConfLevelCombo=="confLevel95Choice") alpha=0.05
+        #else alpha=0.01
+        #end
+    #end;
+#end
+
+#if($pbSpline=='1') 
+    pbspline x=$X y=$Y / nomarkers
+    #if($GRP) group=$GRP #end
+    #if($degreeSpline!='3') degree=$degreeSpline #end
+    #if($splineConfLevelCombo!="confLevelNoneChoice") 
+        cli
+        #if($splineConfLevelCombo=="confLevel90Choice") alpha=0.10
+        #elseif($splineConfLevelCombo=="confLevel95Choice") alpha=0.05
+        #else alpha=0.01
+        #end
+    #end;
+#end
+
+##--Scatter plot settings--##
+scatter x=$X y=$Y / 
+#if($GRP) group=$GRP #end
+#if($LBL) datalabel=$LBL #end
+#if($URL) url=$URL #end
+#if($SETATTRS=='Yes') markerattrs=(
+    #if($markerSymbol!='auto') symbol=$markerSymbol #end
+    #if($useColor=='1' && $markerColor!='none') color=$markerColor #end
+    #if($markerSize!='7') size=$markerSize #end)
+#end
+#if($markerLabelSize && $markerLabelSize!='')datalabelattrs=(size=$markerLabelSize) #end
+#if($plotTrans!='0') transparency=$plotTrans #end
+;
+
+#set($XAXIS=0)
+#if($showXGrid=='1' || $displayXLabel!='defaultLabel' || $logXAxis=='1' || $labelRotation=='1' || $xAxisMin=='1' || $xAxisMax=='1') #set($XAXIS=1) #end
+#if($XAXIS=='1')
+##--X Axis--##
+    xaxis
+    #if($xAxisMin=='1') min=$xAxisMinValue #end
+    #if($xAxisMax=='1') max=$xAxisMaxValue #end
+    #if($showXGrid=='1') grid #end
+    #if($displayXLabel=='noLabel') display=(nolabel) #end
+    #if($displayXLabel=='customLabel' && $xLabel.length()>0) label=$CTMUtil.doubleQuoteString($xLabel) #end
+    #if($logXAxis=='1')
+        type=log #if($logBaseComboX!='10') logbase=$logBaseComboX #end
+    #end
+    #if($labelRotation=='1') valuesrotate=#if($tickRotate=='diagonalRotation') diagonal #else vertical #end #end
+;
+#end
+
+#set($YAXIS=0)
+#if($showYGrid=='1' || $displayYLabel!='defaultLabel' || $logYAxis=='1' || $yAxisMin=='1' || $yAxisMax=='1') #set($YAXIS=1) #end
+#if($YAXIS=='1')
+##--Y Axis--##
+    yaxis
+    #if($yAxisMin=='1') min=$yAxisMinValue #end
+    #if($yAxisMax=='1') max=$yAxisMaxValue #end
+    #if($showYGrid=='1') grid #end
+    #if($displayYLabel=='noLabel') display=(nolabel) #end
+    #if($displayYLabel=='customLabel') label=$CTMUtil.doubleQuoteString($yLabel) #end
+    #if($logYAxis=='1')
+        type=log #if($logBaseComboY!='10') logbase=$logBaseComboY #end
+    #end
+;
+#end
+
+#if($X && $xRefLine=='1')
+##--X Axis Reference Line--##
+    refline #if($X.get('type')=='Char') $CTMUtil.doubleQuoteString($xRefLineLevel) #else $xRefLineValue #end /
+    axis=x lineattrs=(thickness=2 color=blue)
+    #if($X.get('type')=='Char' && $xRefLineOffset!='0') discreteoffset=$xRefLineOffset #end
+	label#if($xRefLabel=='xRefCustom')=$CTMUtil.doubleQuoteString($xRefCustomLabel) #end
+    labelattrs=(color=blue)
+;
+#end
+
+#if($Y && $yRefLine=='1')
+##--Y Axis Reference Line--##
+    refline #if($Y.get('type')=='Char') $CTMUtil.doubleQuoteString($yRefLineLevel) #else $yRefLineValue #end /
+    axis=y lineattrs=(thickness=2 color=green)
+    #if($Y.get('type')=='Char' && $yRefLineOffset!='0') discreteoffset=$yRefLineOffset #end
+	label#if($yRefLabel=='yRefCustom')=$CTMUtil.doubleQuoteString($yRefCustomLabel) #end
+    labelattrs=(color=green)
+;
+#end
+
+##--Legend Settings--##
+#if($GRP)
+    #if($legendLoc && $legendLoc=='inside')
+        keylegend / location=$legendLoc;
+    #end
+#end
+run;
+
+##--Clean up--##
+ods graphics / reset;
+#if($titleString!="") title; #end
+#if($footnoteString!="" || ($dataSource.getWhereClause()!="" && $includeAsFootnote=='1'))
+    #if($dataSource.getWhereClause()!="" && $includeAsFootnote=='1') footnote; #end
+    #if($footnoteString!="") footnote2; #end
+#end
+
+#if($BY)
+proc datasets library=WORK noprint; 
+    delete _ScatterTaskData; 
+run;
+#end
+]]></CodeTemplate>
+    
+
+<TemplateValues version="3.8">
+<![CDATA[
+{"noLabel":"No label","yRefLabel":"yRefValue","regConfLevelCombo":"confLevelNoneChoice","groupVar":"json:[{\"value\":\"target\",\"type\":\"Numeric\",\"length\":8,\"format\":\"BEST12.\",\"informat\":\"BEST32.\",\"className\":\"RoleObject\"}]","loess":"0","markerSymbol":"circlefilled","px":"Pixels","sasOS":"Linux LIN X64 3.10.0-1062.4.1.el7.x86_64","yRefLineLevel":"","plotTrans100Choice":"100%","diamondFilled":"Filled diamond","xRefLineLevel":"","squareFilled":"Filled square","confLevelNoneChoice":"none (default)","defaultLabel":"Default label","legendLoc":"outside","markerSize":"9","in":"Inches (default)","yRefLine":"0","urlVar":"","yLabel":"","xRefLineOffset":"0","xRefValue":"1","loessNote":"Note: Expect a considerably longer run time (read more)","circle":"Circle","pixelWidth":"640","confLevel90Choice":"90%","triangleFilled":"Filled triangle","markerColor":"#003399","yRefCustom":"0","showYGrid":"1","logYAxis":"0","yRefLineOffsetDefaultChoice":"0 (default)","triangle":"Triangle","rolesGroup":"ROLES","degreeReg":"4","markerDetails":"Details","yRefLineOffset25Choice":"0.25","titleString":"Heart Rate Scatter Plot based on Age","loessConfLevelCombo":"confLevelNoneChoice","logBase10":"10 (default)","graphSize":"GRAPH SIZE","cm":"Cms","verticalRotation":"0","yRefLineOffsetNegative50Choice":"-0.5","yRefValue":"1","yAxis":"Y AXIS","sasVersion":"9.46","includeAsFootnote":"0","xRefLineOffset25Choice":"0.25","cmWidth":"16","confLevel95Choice":"95%","plotTrans25Choice":"25%","displayYLabel":"defaultLabel","xRefLineOffsetDefaultChoice":"0 (default)","xLabel":"","splineConfLevelCombo":"confLevelNoneChoice","addRolesGroup":"ADDITIONAL ROLES","whereClause":"Where clause:","auto":"Auto","xAxis":"X AXIS","yRefLineOffsetNegative25Choice":"-0.25","yAxisMaxValue":"","footnoteSize":"8","cmHeight":"12","xRefLineOffsetNegative25Choice":"-0.25","yRefLineValue":"","inside":"Inside","dataTab":"DATA","xRefLineValue":"","useColor":"0","fitPlots":"FIT CURVES","pixelHeight":"480","xAxisMin":"0","yAxisMin":"0","labelVar":"","loessSmoothValue":"","dimType":"in","xRefCustom":"0","xAxisMax":"0","square":"Square","yRefLineOffset":"0","outside":"Outside (default)","xVar":"json:[{\"value\":\"age\",\"type\":\"Numeric\",\"length\":8,\"format\":\"BEST12.\",\"informat\":\"BEST32.\",\"className\":\"RoleObject\"}]","footnoteString":"Based on age, patients with and without heart diseases mostly between 50-70 years old. Patients with heart diseases tend to have high heart rate compared to patients with no heart diseases. Furthermore, distribution of heart rate of patients who do not have heart disease based on age tends to be stable. Meanwhile, in patients with heart disease, the older a patient is, the patient's maximum heart rate decreases.","appearanceTab":"APPEARANCE","dataSource":{"librarytable":"WORK.IMPORT"},"plotTrans75Choice":"75%","circleFilled":"Filled circle","tickRotate":"diagonalRotation","pbSpline":"0","xRefLineOffsetNegative50Choice":"-0.5","xAxisMinValue":"","xRefCustomLabel":"","titleSize":"12","xRefLineOffset50Choice":"0.5","title":"TITLE AND FOOTNOTE","byVar":"","loessSmooth":"0","plotTrans":"0.25","displayXLabel":"defaultLabel","xRefLabel":"xRefValue","markerLabelSize":"7","logBaseComboX":"10","inchHeight":"5","yRefCustomLabel":"","inchWidth":"6.7","markersGroup":"MARKERS","logBaseE":"e","yVar":"json:[{\"value\":\"thalach\",\"type\":\"Numeric\",\"length\":8,\"format\":\"BEST12.\",\"informat\":\"BEST32.\",\"className\":\"RoleObject\"}]","logXAxis":"0","confLevel99Choice":"99%","yRefLineOffset50Choice":"0.5","xRefLine":"0","degreeSpline":"3","logBaseComboY":"10","yAxisMax":"0","dataGroup":"DATA","diamond":"Diamond","plotTrans50Choice":"50%","regression":"1","loessNoteReadMore":"If the number of observations in the loess plot exceeds the default limit of 5,000, the task adds an ODS graphics option (loessmaxobs) whose value is set to the number of observations.","plotTransDefaultChoice":"0% (default)","showXGrid":"1","logBase2":"2","diagonalRotation":"1","yAxisMinValue":"","customLabel":"Custom label","xAxisMaxValue":"","labelRotation":"0"}
+]]>
+</TemplateValues>
+</Task>

@@ -1,0 +1,813 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.4">
+    <Registration>
+        <Name>Bar Chart</Name>
+        <Description>Bar charts compare numeric values or statistics between different values of a chart variable. Bar charts show the relative magnitude of data by displaying bars of varying height. Each bar represents a category of data.</Description>
+        <GUID>A0EEED19-14E9-4AA8-9E3E-4F1B22B078F2</GUID>
+        <Procedures>SGPLOT</Procedures>
+        <Version>3.8</Version>
+        <Links>
+            <Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.8&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+            <Link href=""/>
+            <Link href=""/>
+            <Link href="http://documentation.sas.com/?softwareId=MVADOC&amp;softwareVersion=3.8_9.4&amp;softwareContextId=proc_sgplot&amp;requestor=inapp">The SGPLOT Procedure</Link>
+            <Link href=""/>
+            <Link href=""/>
+            <Link href="http://support.sas.com/training/tutorial/viya/index.html">SAS Tutorials</Link>
+        </Links>
+    </Registration>
+    <Metadata>
+        <!--- Define the data roles for this task.    -->
+        <DataSources>
+            <DataSource name="dataSource" where="true">
+                <Roles>
+                    <Role maxVars="1" minVars="1" name="category" type="A">Category:</Role>
+                    <Role indent="1" maxVars="1" minVars="1"
+                        name="measure" type="N">Variable:</Role>
+                    <Role maxVars="1" minVars="0" name="group" type="A">Subcategory:</Role>
+                    <Role maxVars="1" minVars="0" name="urlVar" type="C">URL variable:</Role>
+                    <Role maxVars="1" minVars="0" name="byVar" type="A">Group analysis by:</Role>
+                    <Role maxVars="1" minVars="0" name="weight" type="N">Weight:</Role>
+                </Roles>
+            </DataSource>
+        </DataSources>
+        <Options>
+            <Option inputType="string" name="dataTab">DATA</Option>
+            <Option inputType="string" name="dataGroup">DATA</Option>
+            <Option inputType="string" name="rolesGroup">ROLES</Option>
+            <Option inputType="string" name="addRolesGroup">ADDITIONAL ROLES</Option>
+            <Option inputType="string" name="appearanceTab">APPEARANCE</Option>
+            <!--- Define the task options.-->
+            <Option defaultValue="0" inputType="checkbox" name="includeAsFootnote">Include filter clause as footnote</Option>
+            <!--- 'whereClause' option only used in code template.-->
+            <Option inputType="string" name="whereClause">Where clause:</Option>
+            <Option inputType="string" name="title">TITLE AND FOOTNOTE</Option>
+            <Option defaultValue="" inputType="inputtext"
+                name="titleString" width="400px">Title:</Option>
+            <Option decimalPlaces="0" defaultValue="14" increment="1"
+                indent="1" inputType="numstepper"
+                invalidMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                maxValue="24" minValue="5"
+                missingMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                name="titleSize"
+                promptMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                rangeMessage="Enter an integer greater than or equal to 5 and less than or equal to 24."
+                required="true" size="8em">Font size (default: 14 pt):</Option>
+            <Option defaultValue="" inputType="inputtext"
+                name="footnoteString" width="400px">Footnote:</Option>
+            <Option decimalPlaces="0" defaultValue="12" increment="1"
+                indent="1" inputType="numstepper"
+                invalidMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                maxValue="20" minValue="5"
+                missingMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                name="footnoteSize"
+                promptMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                rangeMessage="Enter an integer greater than or equal to 5 and less than or equal to 20."
+                required="true" size="8em">Font size (default: 12 pt):</Option>
+            <Option inputType="string" name="orientation">CHART ORIENTATION</Option>
+            <Option defaultValue="1" inputType="radio" name="vertical" variable="barOrient">Vertical</Option>
+            <Option inputType="radio" name="horizontal" variable="barOrient">Horizontal</Option>
+            <!--- subcategory options -->
+            <Option indent="1" inputType="string" name="subcatGroup">Options:</Option>
+            <Option inputType="string" name="groupedBarStyle">Display grouped bars:</Option>
+            <Option defaultValue="1" indent="1" inputType="radio"
+                name="cluster" variable="groupDisplay">Clustered side by side</Option>
+            <Option indent="1" inputType="radio" name="stack" variable="groupDisplay">Stacked on one another</Option>
+            <Option defaultValue="outside" inputType="combobox"
+                name="legendLoc" width="160px">Legend location:</Option>
+            <Option inputType="string" name="outside">Outside (default)</Option>
+            <Option inputType="string" name="inside">Inside</Option>
+            <!--- measure options -->
+            <Option defaultValue="freq" inputType="combobox"
+                name="measureCombo" width="250px">Measure:</Option>
+            <Option inputType="string" name="measureChoiceFreq" returnValue="freq">Frequency count (default)</Option>
+            <Option inputType="string" name="measureChoicePercent" returnValue="percent">Frequency percent</Option>
+            <Option inputType="string" name="measureChoiceVar">Variable</Option>
+            <Option indent="1" inputType="string" name="statisticGroup">Statistic:</Option>
+            <Option defaultValue="sum" inputType="combobox"
+                name="statChoiceResponse" width="250px"/>
+            <Option inputType="string" name="statChoicePercent" returnValue="percent">Percent of the sum</Option>
+            <Option inputType="string" name="statChoiceSum" returnValue="sum">Sum (default)</Option>
+            <Option inputType="string" name="statChoiceMean" returnValue="mean">Mean</Option>
+            <Option defaultValue="none" indent="1" inputType="combobox"
+                name="barLimits" width="250px">Error bars:</Option>
+            <Option inputType="string" name="none">(none)</Option>
+            <Option inputType="string" name="both">Both</Option>
+            <Option inputType="string" name="upper">Upper</Option>
+            <Option inputType="string" name="lower">Lower</Option>
+            <Option defaultValue="clm" indent="1" inputType="combobox"
+                name="barLimitStat" width="250px">Type:</Option>
+            <Option inputType="string" name="CLM" returnValue="clm">Confidence limit (default)</Option>
+            <Option inputType="string" name="stdDev" returnValue="stddev">Standard deviation</Option>
+            <Option inputType="string" name="stdErr" returnValue="stderr">Standard error</Option>
+            <Option defaultValue="0" indent="2" inputType="checkbox" name="barNumStdChkbox">Specify a statistic multiplier</Option>
+            <Option defaultValue="1" indent="3" inputType="numbertext"
+                invalidMessage="Enter a number greater than 0."
+                minValue="0.00000000000000000000000001"
+                missingMessage="Enter a number greater than 0."
+                name="barNumStd"
+                promptMessage="Enter a number greater than 0."
+                rangeMessage="Enter a number greater than 0."
+                required="true" width="6em">Multiplier:</Option>
+            <Option defaultValue="confLevelDefaultChoice" indent="2"
+                inputType="combobox" name="confLevelCombo">Confidence level:</Option>
+            <Option inputType="string" name="confLevelDefaultChoice">95% (default)</Option>
+            <Option inputType="string" name="confLevel99Choice">99%</Option>
+            <Option inputType="string" name="confLevel90Choice">90%</Option>
+            <Option inputType="string" name="confLevelCustomChoice">Use custom value</Option>
+            <Option defaultValue="95" indent="3" inputType="numbertext"
+                invalidMessage="Enter a number greater than 0 and less than 100."
+                maxValue="99.99999999999999"
+                minValue="0.000000000000000000000001"
+                missingMessage="Enter a number greater than 0 and less than 100."
+                name="confLevel"
+                promptMessage="Enter a number greater than 0 and less than 100."
+                rangeMessage="Enter a number greater than 0 and less than 100."
+                required="true" width="6em">Custom confidence level (%):</Option>
+            <!--- BARS options -->
+            <Option inputType="string" name="barsGroup">BARS</Option>
+            <Option defaultValue="0" inputType="checkbox" name="barStatLabels">Show labels</Option>
+            <Option defaultValue="0" inputType="checkbox" name="useColor">Set color</Option>
+            <Option defaultValue="#CAD5E5" indent="1" inputType="color" name="barColor">Color</Option>
+            <Option defaultValue="0" inputType="combobox"
+                name="barTrans" width="175px">Color transparency:</Option>
+            <Option inputType="string" name="barTransDefaultChoice" returnValue="0">0% (default)</Option>
+            <Option inputType="string" name="barTrans25Choice" returnValue="0.25">25%</Option>
+            <Option inputType="string" name="barTrans50Choice" returnValue="0.5">50%</Option>
+            <Option inputType="string" name="barTrans75Choice" returnValue="0.75">75%</Option>
+            <Option inputType="string" name="barTrans100Choice" returnValue="1">100%</Option>
+            <Option inputType="string" name="barDetails">Details</Option>
+            <Option defaultValue="0" inputType="checkbox" name="fillGradient">Apply color gradient</Option>
+            <Option defaultValue="none" inputType="combobox"
+                name="barSkin" width="175px">Effect:</Option>
+            <Option inputType="string" name="gloss">Gloss</Option>
+            <Option inputType="string" name="sheen">Sheen</Option>
+            <Option inputType="string" name="crisp">Crisp</Option>
+            <Option inputType="string" name="matte">Matte</Option>
+            <Option inputType="string" name="pressed">Pressed</Option>
+            <!--- AXES options -->
+            <Option inputType="string" name="categoryAxis">CATEGORY AXIS</Option>
+            <Option defaultValue="0" inputType="checkbox" name="catReverse">Reverse tick values</Option>
+            <Option defaultValue="0" inputType="checkbox" name="sortByData">Show tick values in data order</Option>
+            <Option defaultValue="defaultLabel" inputType="combobox" name="displayCatLabel">Display label:</Option>
+            <Option defaultValue="" indent="1" inputType="inputtext"
+                name="catLabel" required="true" width="300px">Label:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="catLabelRotation">Rotate labels in case of tick collisions</Option>
+            <Option defaultValue="1" indent="1" inputType="radio"
+                name="catDiagonalRotation" variable="catTickRotate">Rotate by 45 degrees</Option>
+            <Option indent="1" inputType="radio"
+                name="catVerticalRotation" variable="catTickRotate">Rotate by 90 degrees</Option>
+            <Option defaultValue="0" inputType="checkbox" name="catRefLine">Create a reference line</Option>
+            <Option indent="1" inputType="distinct"
+                name="catRefLineValue" required="true"
+                selectMessage="Select a reference value" source="category">Reference value:</Option>
+            <Option defaultValue="1" indent="1" inputType="radio"
+                name="catRefValue" variable="catRefLabel">Reference value as label</Option>
+            <Option indent="1" inputType="radio" name="catRefCustom" variable="catRefLabel">Custom label</Option>
+            <Option defaultValue="" indent="2" inputType="inputtext"
+                name="catRefCustomLabel" required="true" width="300px">Label:</Option>
+            <Option defaultValue="0" indent="1" inputType="combobox"
+                name="catRefLineOffset" width="175px">Line offset:</Option>
+            <Option inputType="string"
+                name="catRefLineOffsetDefaultChoice" returnValue="0">0 (default)</Option>
+            <Option inputType="string"
+                name="catRefLineOffsetNegative50Choice" returnValue="-0.5">-0.5</Option>
+            <Option inputType="string"
+                name="catRefLineOffsetNegative25Choice" returnValue="-0.25">-0.25</Option>
+            <Option inputType="string" name="catRefLineOffset25Choice" returnValue="0.25">0.25</Option>
+            <Option inputType="string" name="catRefLineOffset50Choice" returnValue="0.5">0.5</Option>
+            <Option inputType="string" name="measureAxis">MEASURE AXIS</Option>
+            <Option defaultValue="1" inputType="checkbox" name="showRespGrid">Show grid lines</Option>
+            <Option defaultValue="defaultLabel" inputType="combobox" name="displayRespLabel1">Display label:</Option>
+            <Option defaultValue="defaultLabel" inputType="combobox" name="displayRespLabel2">Display label:</Option>
+            <Option inputType="string" name="defaultLabel">Default label</Option>
+            <Option inputType="string" name="noLabel">No label</Option>
+            <Option inputType="string" name="statsLabel">Statistics name in label</Option>
+            <Option inputType="string" name="noStatsLabel">No statistics name in label</Option>
+            <Option inputType="string" name="customLabel">Custom label</Option>
+            <Option defaultValue="" indent="1" inputType="inputtext"
+                name="respLabel" required="true" width="300px">Label:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="logAxis">Use logarithmic scale</Option>
+            <Option defaultValue="10" indent="1" inputType="combobox" name="logBaseCombo">Base value:</Option>
+            <Option inputType="string" name="logBase2" returnValue="2">2</Option>
+            <Option inputType="string" name="logBase10" returnValue="10">10 (default)</Option>
+            <Option inputType="string" name="logBaseE" returnValue="e">e</Option>
+            <Option indent="1" inputType="numbertext"
+                invalidMessage="Enter a number greater than 0."
+                minValue="0.000000000000000000000001"
+                missingMessage="Enter a number greater than 0."
+                name="logBaseline"
+                promptMessage="Enter a number greater than 0."
+                rangeMessage="Enter a number greater than 0."
+                required="true" width="6em">Axis baseline:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="respLabelRotation">Rotate labels in case of tick collisions</Option>
+            <Option defaultValue="1" indent="1" inputType="radio"
+                name="respDiagonalRotation" variable="respTickRotate">Rotate by 45 degrees</Option>
+            <Option indent="1" inputType="radio"
+                name="respVerticalRotation" variable="respTickRotate">Rotate by 90 degrees</Option>
+            <Option defaultValue="0" inputType="checkbox" name="respRefLine">Create a reference line</Option>
+            <Option indent="1" inputType="numbertext"
+                invalidMessage="Enter a number."
+                missingMessage="Enter a number." name="respRefLineValue"
+                promptMessage="Enter a number."
+                rangeMessage="Enter a number." required="true" width="6em">Reference value:</Option>
+            <Option defaultValue="1" indent="1" inputType="radio"
+                name="respRefValue" variable="respRefLabel">Reference value as label</Option>
+            <Option indent="1" inputType="radio" name="respRefCustom" variable="respRefLabel">Custom label</Option>
+            <Option defaultValue="" indent="2" inputType="inputtext"
+                name="respRefCustomLabel" required="true" width="300px">Label:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="respAxisMin">Specify minimum value</Option>
+            <Option indent="1" inputType="numbertext"
+                invalidMessage="Enter a number."
+                missingMessage="Enter a number." name="respAxisMinValue"
+                promptMessage="Enter a number."
+                rangeMessage="Enter a number." required="true" width="6em">Minimum value:</Option>
+            <Option defaultValue="0" inputType="checkbox" name="respAxisMax">Specify maximum value</Option>
+            <Option indent="1" inputType="numbertext"
+                invalidMessage="Enter a number."
+                missingMessage="Enter a number." name="respAxisMaxValue"
+                promptMessage="Enter a number."
+                rangeMessage="Enter a number." required="true" width="6em">Maximum value:</Option>
+            <Option inputType="string" name="graphSize">GRAPH SIZE</Option>
+            <Option defaultValue="in" inputType="combobox"
+                name="dimType" width="100px">Units:</Option>
+            <Option inputType="string" name="in">Inches (default)</Option>
+            <Option inputType="string" name="cm">Cms</Option>
+            <Option inputType="string" name="px">Pixels</Option>
+            <Option decimalPlaces="0,1" defaultValue="6.4"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 2 to 12 for the width in inches"
+                maxValue="12.0" minValue="2.0"
+                missingMessage="Enter a number from 2 to 12 for the width in inches"
+                name="inchWidth"
+                promptMessage="Enter a number from 2 to 12 for the width in inches"
+                rangeMessage="Enter a number from 2 to 12 for the width in inches"
+                required="true" size="10em">Width:</Option>
+            <Option decimalPlaces="0,1" defaultValue="4.8"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 2 to 12 for the height in inches"
+                maxValue="12.0" minValue="2.0"
+                missingMessage="Enter a number from 2 to 12 for the height in inches"
+                name="inchHeight"
+                promptMessage="Enter a number from 2 to 12 for the height in inches"
+                rangeMessage="Enter a number from 2 to 12 for the height in inches"
+                required="true" size="10em">Height:</Option>
+            <Option decimalPlaces="0,1" defaultValue="16"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 5 to 30 for the width in cms"
+                maxValue="30.0" minValue="5.0"
+                missingMessage="Enter a number from 5 to 30 for the width in cms"
+                name="cmWidth"
+                promptMessage="Enter a number from 5 to 30 for the width in cms"
+                rangeMessage="Enter a number from 5 to 30 for the width in cms"
+                required="true" size="10em">Width:</Option>
+            <Option decimalPlaces="0,1" defaultValue="12"
+                increment="0.1" inputType="numstepper"
+                invalidMessage="Enter a number from 5 to 30 for the height in cms"
+                maxValue="30.0" minValue="5.0"
+                missingMessage="Enter a number from 5 to 30 for the height in cms"
+                name="cmHeight"
+                promptMessage="Enter a number from 5 to 30 for the height in cms"
+                rangeMessage="Enter a number from 5 to 30 for the height in cms"
+                required="true" size="10em">Height:</Option>
+            <Option decimalPlaces="0,1" defaultValue="640" increment="1"
+                inputType="numstepper"
+                invalidMessage="Enter a number from 50 to 1200 for the width in pixels"
+                maxValue="1200" minValue="50"
+                missingMessage="Enter a number from 50 to 1200 for the width in pixels"
+                name="pixelWidth"
+                promptMessage="Enter a number from 50 to 1200 for the width in pixels"
+                rangeMessage="Enter a number from 50 to 1200 for the width in pixels"
+                required="true" size="10em">Width:</Option>
+            <Option decimalPlaces="0,1" defaultValue="480" increment="1"
+                inputType="numstepper"
+                invalidMessage="Enter a number from 50 to 1200 for the height in pixels"
+                maxValue="1200" minValue="50"
+                missingMessage="Enter a number from 50 to 1200 for the height in pixels"
+                name="pixelHeight"
+                promptMessage="Enter a number from 50 to 1200 for the height in pixels"
+                rangeMessage="Enter a number from 50 to 1200 for the height in pixels"
+                required="true" size="10em">Height:</Option>
+        </Options>
+    </Metadata>
+    <!--- Define the task options relationships                  -->
+    <!--- The UI engine will determine the best respresentation. -->
+    <UI>
+        <Container option="dataTab">
+            <Group open="true" option="dataGroup">
+                <DataItem data="dataSource"/>
+            </Group>
+            <Group open="true" option="orientation">
+                <OptionItem option="vertical"/>
+                <OptionItem option="horizontal"/>
+            </Group>
+            <Group open="true" option="rolesGroup">
+                <RoleItem role="category"/>
+                <RoleItem role="group"/>
+                <Group open="true" option="subcatGroup">
+                    <OptionItem option="groupedBarStyle"/>
+                    <OptionItem option="cluster"/>
+                    <OptionItem option="stack"/>
+                    <OptionChoice option="legendLoc">
+                        <OptionItem option="outside"/>
+                        <OptionItem option="inside"/>
+                    </OptionChoice>
+                </Group>
+                <OptionChoice option="measureCombo">
+                    <OptionItem option="measureChoiceFreq"/>
+                    <OptionItem option="measureChoicePercent"/>
+                    <OptionItem option="measureChoiceVar"/>
+                </OptionChoice>
+                <RoleItem role="measure"/>
+                <Group open="true" option="statisticGroup">
+                    <OptionChoice option="statChoiceResponse">
+                        <OptionItem option="statChoiceSum"/>
+                        <OptionItem option="statChoiceMean"/>
+                        <OptionItem option="statChoicePercent"/>
+                    </OptionChoice>
+                    <OptionChoice option="barLimits">
+                        <OptionItem option="none"/>
+                        <OptionItem option="both"/>
+                        <OptionItem option="upper"/>
+                        <OptionItem option="lower"/>
+                    </OptionChoice>
+                    <OptionChoice option="barLimitStat">
+                        <OptionItem option="CLM"/>
+                        <OptionItem option="stdDev"/>
+                        <OptionItem option="stdErr"/>
+                    </OptionChoice>
+                    <OptionItem option="barNumStdChkbox"/>
+                    <OptionItem option="barNumStd"/>
+                    <OptionChoice option="confLevelCombo">
+                        <OptionItem option="confLevel90Choice"/>
+                        <OptionItem option="confLevelDefaultChoice"/>
+                        <OptionItem option="confLevel99Choice"/>
+                        <OptionItem option="confLevelCustomChoice"/>
+                    </OptionChoice>
+                    <OptionItem option="confLevel"/>
+                </Group>
+            </Group>
+            <Group open="false" option="addRolesGroup">
+                <RoleItem role="byVar"/>
+                <RoleItem role="weight"/>
+            </Group>
+        </Container>
+        <Container option="appearanceTab">
+            <Group open="true" option="barsGroup">
+                <OptionItem option="barStatLabels"/>
+                <OptionItem option="useColor"/>
+                <OptionItem option="barColor"/>
+                <OptionChoice option="barTrans">
+                    <OptionItem option="barTransDefaultChoice"/>
+                    <OptionItem option="barTrans25Choice"/>
+                    <OptionItem option="barTrans50Choice"/>
+                    <OptionItem option="barTrans75Choice"/>
+                    <OptionItem option="barTrans100Choice"/>
+                </OptionChoice>
+                <Group open="false" option="barDetails">
+                    <OptionItem option="fillGradient"/>
+                    <OptionChoice option="barSkin">
+                        <OptionItem option="none"/>
+                        <OptionItem option="gloss"/>
+                        <OptionItem option="sheen"/>
+                        <OptionItem option="crisp"/>
+                        <OptionItem option="matte"/>
+                        <OptionItem option="pressed"/>
+                    </OptionChoice>
+                    <RoleItem role="urlVar"/>
+                </Group>
+            </Group>
+            <Group open="false" option="categoryAxis">
+                <OptionItem option="catReverse"/>
+                <OptionItem option="sortByData"/>
+                <OptionChoice option="displayCatLabel">
+                    <OptionItem option="defaultLabel"/>
+                    <OptionItem option="noLabel"/>
+                    <OptionItem option="customLabel"/>
+                </OptionChoice>
+                <OptionItem option="catLabel"/>
+                <OptionItem option="catLabelRotation"/>
+                <OptionItem option="catDiagonalRotation"/>
+                <OptionItem option="catVerticalRotation"/>
+                <OptionItem option="catRefLine"/>
+                <OptionItem option="catRefLineValue"/>
+                <OptionChoice option="catRefLineOffset">
+                    <OptionItem option="catRefLineOffsetNegative50Choice"/>
+                    <OptionItem option="catRefLineOffsetNegative25Choice"/>
+                    <OptionItem option="catRefLineOffsetDefaultChoice"/>
+                    <OptionItem option="catRefLineOffset25Choice"/>
+                    <OptionItem option="catRefLineOffset50Choice"/>
+                </OptionChoice>
+                <OptionItem option="catRefValue"/>
+                <OptionItem option="catRefCustom"/>
+                <OptionItem option="catRefCustomLabel"/>
+            </Group>
+            <Group open="false" option="measureAxis">
+                <OptionItem option="respAxisMin"/>
+                <OptionItem option="respAxisMinValue"/>
+                <OptionItem option="respAxisMax"/>
+                <OptionItem option="respAxisMaxValue"/>
+                <OptionItem option="showRespGrid"/>
+                <OptionChoice option="displayRespLabel1">
+                    <OptionItem option="defaultLabel"/>
+                    <OptionItem option="noLabel"/>
+                    <OptionItem option="statsLabel"/>
+                    <OptionItem option="noStatsLabel"/>
+                    <OptionItem option="customLabel"/>
+                </OptionChoice>
+                <OptionChoice option="displayRespLabel2">
+                    <OptionItem option="defaultLabel"/>
+                    <OptionItem option="noLabel"/>
+                    <OptionItem option="customLabel"/>
+                </OptionChoice>
+                <OptionItem option="respLabel"/>
+                <OptionItem option="logAxis"/>
+                <OptionChoice option="logBaseCombo">
+                    <OptionItem option="logBase10"/>
+                    <OptionItem option="logBase2"/>
+                    <OptionItem option="logBaseE"/>
+                </OptionChoice>
+                <OptionItem option="logBaseline"/>
+                <OptionItem option="respLabelRotation"/>
+                <OptionItem option="respDiagonalRotation"/>
+                <OptionItem option="respVerticalRotation"/>
+                <OptionItem option="respRefLine"/>
+                <OptionItem option="respRefLineValue"/>
+                <OptionItem option="respRefValue"/>
+                <OptionItem option="respRefCustom"/>
+                <OptionItem option="respRefCustomLabel"/>
+            </Group>
+            <Group open="false" option="title">
+                <OptionItem option="titleString"/>
+                <OptionItem option="titleSize"/>
+                <OptionItem option="footnoteString"/>
+                <OptionItem option="footnoteSize"/>
+                <OptionItem option="includeAsFootnote"/>
+            </Group>
+            <Group option="graphSize">
+                <OptionChoice option="dimType">
+                    <OptionItem option="in"/>
+                    <OptionItem option="cm"/>
+                    <OptionItem option="px"/>
+                </OptionChoice>
+                <OptionItem option="inchWidth"/>
+                <OptionItem option="inchHeight"/>
+                <OptionItem option="cmWidth"/>
+                <OptionItem option="cmHeight"/>
+                <OptionItem option="pixelWidth"/>
+                <OptionItem option="pixelHeight"/>
+            </Group>
+        </Container>
+    </UI>
+    <Dependencies>
+        <Dependency condition="($dataSource.getWhereClause()!='')">
+            <Target action="show" conditionResult="true" option="includeAsFootnote"/>
+            <Target action="hide" conditionResult="false" option="includeAsFootnote"/>
+        </Dependency>
+        <Dependency condition="($group.size()>0)">
+            <Target action="show" conditionResult="true" option="subcatGroup"/>
+            <Target action="hide" conditionResult="false" option="subcatGroup"/>
+        </Dependency>
+        <Dependency condition="($group.size()>0)">
+            <Target action="disable" conditionResult="true" option="useColor"/>
+            <Target action="enable" conditionResult="false" option="useColor"/>
+        </Dependency>
+        <Dependency condition="($group.size()==0 &amp;&amp; $useColor=='1')">
+            <Target action="show" conditionResult="true" option="barColor"/>
+            <Target action="hide" conditionResult="false" option="barColor"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar')">
+            <Target action="show" conditionResult="true" option="measure"/>
+            <Target action="hide" conditionResult="false" option="measure"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar' &amp;&amp; $measure.size()>0)">
+            <Target action="show" conditionResult="true" option="statisticGroup"/>
+            <Target action="hide" conditionResult="false" option="statisticGroup"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar' &amp;&amp; $measure.size()>0 &amp;&amp; !($group.size()>0 &amp;&amp; $groupDisplay=='stack') &amp;&amp; $statChoiceResponse=='mean')">
+            <Target action="show" conditionResult="true" option="barLimits"/>
+            <Target action="hide" conditionResult="false" option="barLimits"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar' &amp;&amp; $measure.size()>0 &amp;&amp; !($group.size()>0 &amp;&amp; $groupDisplay=='stack')                  &amp;&amp; $statChoiceResponse=='mean' &amp;&amp; !($barLimits == 'none'))">
+            <Target action="show" conditionResult="true" option="barLimitStat"/>
+            <Target action="hide" conditionResult="false" option="barLimitStat"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar' &amp;&amp; $measure.size()>0 &amp;&amp; !($group.size()>0 &amp;&amp; $groupDisplay=='stack')                  &amp;&amp; $statChoiceResponse=='mean' &amp;&amp; !($barLimits=='none') &amp;&amp; !($barLimitStat=='clm'))">
+            <Target action="show" conditionResult="true" option="barNumStdChkbox"/>
+            <Target action="hide" conditionResult="false" option="barNumStdChkbox"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar' &amp;&amp; $measure.size()>0 &amp;&amp; !($group.size()>0 &amp;&amp; $groupDisplay=='stack')                  &amp;&amp; $statChoiceResponse=='mean' &amp;&amp; !($barLimits=='none') &amp;&amp; !($barLimitStat=='clm') &amp;&amp; $barNumStdChkbox=='1')">
+            <Target action="show" conditionResult="true" option="barNumStd"/>
+            <Target action="hide" conditionResult="false" option="barNumStd"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar' &amp;&amp; $measure.size()>0 &amp;&amp; !($group.size()>0 &amp;&amp; $groupDisplay=='stack')                  &amp;&amp; $statChoiceResponse=='mean' &amp;&amp; !($barLimits=='none') &amp;&amp; ($barLimitStat=='clm'))">
+            <Target action="show" conditionResult="true" option="confLevelCombo"/>
+            <Target action="hide" conditionResult="false" option="confLevelCombo"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar' &amp;&amp; $measure.size()>0 &amp;&amp; !($group.size()>0 &amp;&amp; $groupDisplay=='stack')                  &amp;&amp; $statChoiceResponse=='mean' &amp;&amp; !($barLimits=='none') &amp;&amp; ($barLimitStat=='clm') &amp;&amp; $confLevelCombo=='confLevelCustomChoice')">
+            <Target action="show" conditionResult="true" option="confLevel"/>
+            <Target action="hide" conditionResult="false" option="confLevel"/>
+        </Dependency>
+        <Dependency condition="($titleString!='')">
+            <Target action="enable" conditionResult="true" option="titleSize"/>
+            <Target action="disable" conditionResult="false" option="titleSize"/>
+        </Dependency>
+        <Dependency condition="($footnoteString!='' || ($dataSource.getWhereClause()!='' &amp;&amp; $includeAsFootnote=='1'))">
+            <Target action="enable" conditionResult="true" option="footnoteSize"/>
+            <Target action="disable" conditionResult="false" option="footnoteSize"/>
+        </Dependency>
+        <Dependency condition="($displayCatLabel=='customLabel')">
+            <Target action="show" conditionResult="true" option="catLabel"/>
+            <Target action="hide" conditionResult="false" option="catLabel"/>
+        </Dependency>
+        <Dependency condition="($respAxisMin=='1')">
+            <Target action="show" conditionResult="true" option="respAxisMinValue"/>
+            <Target action="hide" conditionResult="false" option="respAxisMinValue"/>
+        </Dependency>
+        <Dependency condition="($respAxisMax=='1')">
+            <Target action="show" conditionResult="true" option="respAxisMaxValue"/>
+            <Target action="hide" conditionResult="false" option="respAxisMaxValue"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar' &amp;&amp; $measure.size()>0)">
+            <Target action="show" conditionResult="true" option="displayRespLabel1"/>
+            <Target action="hide" conditionResult="false" option="displayRespLabel1"/>
+        </Dependency>
+        <Dependency condition="($measureCombo=='measureChoiceVar' &amp;&amp; $measure.size()>0)">
+            <Target action="hide" conditionResult="true" option="displayRespLabel2"/>
+            <Target action="show" conditionResult="false" option="displayRespLabel2"/>
+        </Dependency>
+        <Dependency condition="($displayRespLabel1 &amp;&amp; $displayRespLabel1=='customLabel') || ($displayRespLabel2 &amp;&amp; $displayRespLabel2=='customLabel')">
+            <Target action="show" conditionResult="true" option="respLabel"/>
+            <Target action="hide" conditionResult="false" option="respLabel"/>
+        </Dependency>
+        <Dependency condition="($logAxis=='1')">
+            <Target action="show" conditionResult="true" option="logBaseCombo"/>
+            <Target action="hide" conditionResult="false" option="logBaseCombo"/>
+        </Dependency>
+        <Dependency condition="($logAxis=='1')">
+            <Target action="show" conditionResult="true" option="logBaseline"/>
+            <Target action="hide" conditionResult="false" option="logBaseline"/>
+        </Dependency>
+        <Dependency condition="($barOrient=='vertical')">
+            <Target action="show" conditionResult="true" option="catLabelRotation"/>
+            <Target action="hide" conditionResult="false" option="catLabelRotation"/>
+        </Dependency>
+        <Dependency condition="($barOrient=='vertical' &amp;&amp; $catLabelRotation=='1')">
+            <Target action="show" conditionResult="true" option="catTickRotate"/>
+            <Target action="hide" conditionResult="false" option="catTickRotate"/>
+        </Dependency>
+        <Dependency condition="($barOrient=='horizontal')">
+            <Target action="show" conditionResult="true" option="respLabelRotation"/>
+            <Target action="hide" conditionResult="false" option="respLabelRotation"/>
+        </Dependency>
+        <Dependency condition="($barOrient=='horizontal' &amp;&amp; $respLabelRotation=='1')">
+            <Target action="show" conditionResult="true" option="respTickRotate"/>
+            <Target action="hide" conditionResult="false" option="respTickRotate"/>
+        </Dependency>
+        <Dependency condition="($catRefLine=='1')">
+            <Target action="show" conditionResult="true" option="catRefLineValue"/>
+            <Target action="hide" conditionResult="false" option="catRefLineValue"/>
+            <Target action="show" conditionResult="true" option="catRefLineOffset"/>
+            <Target action="hide" conditionResult="false" option="catRefLineOffset"/>
+            <Target action="show" conditionResult="true" option="catRefLabel"/>
+            <Target action="hide" conditionResult="false" option="catRefLabel"/>
+        </Dependency>
+        <Dependency condition="($catRefLine=='1' &amp;&amp; $catRefLabel=='catRefCustom')">
+            <Target action="show" conditionResult="true" option="catRefCustomLabel"/>
+            <Target action="hide" conditionResult="false" option="catRefCustomLabel"/>
+        </Dependency>
+        <Dependency condition="($respRefLine=='1')">
+            <Target action="show" conditionResult="true" option="respRefLineValue"/>
+            <Target action="hide" conditionResult="false" option="respRefLineValue"/>
+            <Target action="show" conditionResult="true" option="respRefLabel"/>
+            <Target action="hide" conditionResult="false" option="respRefLabel"/>
+        </Dependency>
+        <Dependency condition="($respRefLine=='1' &amp;&amp; $respRefLabel=='respRefCustom')">
+            <Target action="show" conditionResult="true" option="respRefCustomLabel"/>
+            <Target action="hide" conditionResult="false" option="respRefCustomLabel"/>
+        </Dependency>
+        <Dependency condition="($dimType=='px')">
+            <Target action="show" conditionResult="true" option="pixelWidth"/>
+            <Target action="show" conditionResult="true" option="pixelHeight"/>
+            <Target action="hide" conditionResult="true" option="inchWidth"/>
+            <Target action="hide" conditionResult="true" option="inchHeight"/>
+            <Target action="hide" conditionResult="true" option="cmWidth"/>
+            <Target action="hide" conditionResult="true" option="cmHeight"/>
+        </Dependency>
+        <Dependency condition="($dimType=='in')">
+            <Target action="hide" conditionResult="true" option="pixelWidth"/>
+            <Target action="hide" conditionResult="true" option="pixelHeight"/>
+            <Target action="show" conditionResult="true" option="inchWidth"/>
+            <Target action="show" conditionResult="true" option="inchHeight"/>
+            <Target action="hide" conditionResult="true" option="cmWidth"/>
+            <Target action="hide" conditionResult="true" option="cmHeight"/>
+        </Dependency>
+        <Dependency condition="($dimType=='cm')">
+            <Target action="hide" conditionResult="true" option="pixelWidth"/>
+            <Target action="hide" conditionResult="true" option="pixelHeight"/>
+            <Target action="hide" conditionResult="true" option="inchWidth"/>
+            <Target action="hide" conditionResult="true" option="inchHeight"/>
+            <Target action="show" conditionResult="true" option="cmWidth"/>
+            <Target action="show" conditionResult="true" option="cmHeight"/>
+        </Dependency>
+    </Dependencies>
+    <Requirements>
+        <Requirement condition="(!($respAxisMin=='1' &amp;&amp; $respAxisMax=='1' &amp;&amp; ($MathTool.toDouble($respAxisMinValue) > $MathTool.toDouble($respAxisMaxValue))))">
+            <Message nlsKey="respAxisMinMaxMsgKey">The maximum value of measure axis should be greater than or equal to the minimum value of measure axis.</Message>
+        </Requirement>
+    </Requirements>
+    <!--- Define the velocity code template.        -->
+    <CodeTemplate><![CDATA[
+##--Extract first item from list--##
+#if($category.size()>0) #set($CAT=$category.get(0)) #end
+#if($measure.size()>0) #set($RESP=$measure.get(0)) #end
+#if($group.size()>0) #set($GRP=$group.get(0)) #end
+#if($urlVar.size()>0) #set($URL=$urlVar.get(0)) #end
+#if($byVar.size()>0) #set($BY=$byVar.get(0)) #end
+#if($weight.size()>0) #set($WGT=$weight.get(0)) #end
+
+##--Set Graph Size--##
+#if($dimType=="in")
+    #set($WIDTH="$inchWidth$dimType")
+    #set($HEIGHT="$inchHeight$dimType")
+#end
+
+#if($dimType=="cm")
+    #set($WIDTH="$cmWidth$dimType")
+    #set($HEIGHT="$cmHeight$dimType")
+#end
+
+#if($dimType=="px")
+    #set($WIDTH="$pixelWidth$dimType")
+    #set($HEIGHT="$pixelHeight$dimType")
+#end
+
+##--Set output size--##
+ods graphics / reset width=$WIDTH height=$HEIGHT imagemap;
+
+#if($BY)
+##--Sort data by BY variable--##
+proc sort data=$dataSource out=_BarChartTaskData;
+    by $BY;
+run;
+#end
+
+##--SGPLOT proc statement--##
+proc sgplot data= #if($BY) _BarChartTaskData #else $dataSource #end#if($dataSource.getWhereClause()!="")(where=($dataSource.getWhereClause())) #end;
+
+#if($BY)
+##--BY Variable--##
+    by $BY;
+#end
+
+##--Build qouted strings for title and footnote to clean up any quotes provided by user--##
+#if($titleString!="") #set($qTitleString=$CTMUtil.doubleQuoteString($titleString)) #end
+#if($footnoteString!="") #set($qFootnoteString=$CTMUtil.doubleQuoteString($footnoteString)) #end
+
+##--TITLE and FOOTNOTE--##
+#set($pt="pt")
+#if($titleString!="") 
+    #set($titleSizePt="$titleSize$pt")
+    title height=$titleSizePt $qTitleString;
+#end
+#if($footnoteString!="" || ($dataSource.getWhereClause()!="" && $includeAsFootnote=='1'))
+    #set($footSizePt="$footnoteSize$pt")
+    #if($dataSource.getWhereClause()!="" && $includeAsFootnote=='1') footnote justify=left height=$footSizePt
+        #set($whereStr="$whereClause $dataSource.getWhereClause()") $CTMUtil.doubleQuoteString($whereStr);
+    #end
+
+    #if($footnoteString!="")
+        footnote2 justify=left height=$footSizePt $qFootnoteString;
+    #end
+#end
+
+#if(($useColor && $useColor=='1') || $barTrans!='0') #set ($SETATTRS='Yes') 
+#else #set($SETATTRS='No')
+#end
+##--Bar chart settings--##
+#if($barOrient=='vertical') vbar $CAT
+#else hbar $CAT
+#end / 
+#if($RESP) response=$RESP #end
+#if($URL) url=$URL #end
+#if($GRP) 
+    group=$GRP groupdisplay=$groupDisplay
+#end
+#if($SETATTRS=='Yes') fillattrs=(
+    #if($useColor=='1') color=$barColor #end 
+	#if($barTrans!='0') transparency=$barTrans #end)  
+#end
+#if($barStatLabels=='1') datalabel #end
+#if($barLimits)
+    #if($barLimits!='none')
+        limits=$barLimits limitstat=$barLimitStat
+        #if($barNumStdChkbox && $barNumStdChkbox=='1') numstd=$barNumStd #end
+        #if($barLimitStat=='clm') 
+            ## Calculate alpha from confidence level
+            #if($confLevelCombo=="confLevel99Choice") alpha=0.01 #elseif($confLevelCombo=="confLevel90Choice") alpha=0.10 
+            #elseif($confLevelCombo=="confLevelCustomChoice") #if($confLevel!=95) alpha=%sysevalf((100-$confLevel)/100) #end
+            #end
+        #end
+    #end
+#end
+#if($fillGradient=='1') fillType=gradient #end
+#if($RESP)
+    #if($statChoiceResponse!='sum') stat=$statChoiceResponse #end
+#else
+    #if($measureCombo!='freq') stat=$measureCombo #end
+#end
+#if($barSkin!='none') dataskin=$barSkin #end
+#if($RESP)
+    #if($displayRespLabel1=='statsLabel') statlabel
+    #elseif($displayRespLabel1=='noStatsLabel') nostatlabel
+    #end
+#end
+#if($logAxis=='1') baseline=$logBaseline #end
+#if($WGT) weight=$WGT #end
+;
+
+#set($catAxis=0)
+#if($displayCatLabel!='defaultLabel' || $sortByData=='1' || $catReverse=='1' || $catLabelRotation=='1') #set($catAxis=1) #end
+#if($catAxis=='1')
+##--Category Axis--##
+    #if($barOrient=='vertical') xaxis
+    #else yaxis
+    #end
+    #if($sortByData=='1') discreteorder=data #end
+    #if($catReverse=='1') reverse #end
+    #if($displayCatLabel=='noLabel') display=(nolabel) #end
+    #if($displayCatLabel=='customLabel') label=$CTMUtil.doubleQuoteString($catLabel) #end
+    #if($catLabelRotation=='1') valuesrotate=#if($catTickRotate=='catDiagonalRotation') diagonal #else vertical #end #end
+;
+#end
+        
+#set($respAxis=0)
+#if(($measureCombo=='measureChoiceVar' && $measure.size()>0 && ($displayRespLabel1=='noLabel' || $displayRespLabel1=='customLabel')) 
+    || ($measureCombo!='measureChoiceVar' && ($displayRespLabel2=='noLabel' || $displayRespLabel2=='customLabel')) 
+    || $showRespGrid=='1' || $logAxis=='1' || $respLabelRotation=='1' || $respAxisMin=='1' || $respAxisMax=='1') #set($respAxis=1) #end
+#if($respAxis=='1')
+##--Response Axis--##
+    #if($barOrient=='vertical') yaxis
+    #else xaxis
+    #end
+    #if($respAxisMin=='1') min=$respAxisMinValue #end
+    #if($respAxisMax=='1') max=$respAxisMaxValue #end
+    #if($showRespGrid=='1') grid #end
+    #if(($measureCombo=='measureChoiceVar' && $measure.size()>0 && $displayRespLabel1=='noLabel') || ($measureCombo!='measureChoiceVar' && $displayRespLabel2=='noLabel')) display=(nolabel) #end
+    #if(($measureCombo=='measureChoiceVar' && $measure.size()>0 && $displayRespLabel1=='customLabel') || ($measureCombo!='measureChoiceVar' && $displayRespLabel2=='customLabel')) label=$CTMUtil.doubleQuoteString($respLabel) #end
+    #if($logAxis=='1')
+        type=log #if($logBaseCombo!='10') logbase=$logBaseCombo #end
+    #end
+    #if($respLabelRotation=='1') valuesrotate=#if($respTickRotate=='respDiagonalRotation') diagonal #else vertical #end #end
+;
+#end
+
+#if($catRefLine=='1')
+##--Category Reference Line--##
+    refline #if($CAT.get('type')=='Char') $CTMUtil.doubleQuoteString($catRefLineValue) #else $catRefLineValue #end /
+    #if($barOrient=='vertical') axis=x
+    #else axis=y
+    #end 
+    lineattrs=(thickness=2 color=blue)
+	#if($catRefLineOffset!='0') discreteoffset=$catRefLineOffset #end
+	label#if($catRefLabel=='catRefCustom')=$CTMUtil.doubleQuoteString($catRefCustomLabel) #end
+    labelattrs=(color=blue)
+;
+#end
+
+#if($respRefLine=='1')
+##--Response Reference Line--##
+    refline $respRefLineValue /
+    #if($barOrient=='vertical') axis=y
+    #else axis=x
+    #end
+    lineattrs=(thickness=2 color=green)
+	label#if($respRefLabel=='respRefCustom')=$CTMUtil.doubleQuoteString($respRefCustomLabel) #end
+    labelattrs=(color=green)
+;
+#end
+
+#if($GRP && $legendLoc=='inside')
+##--Legend Settings--##
+    keylegend / location=$legendLoc;
+#end
+run;
+
+##--Clean up--##
+ods graphics / reset;
+#if($titleString!="") title; #end
+#if($footnoteString!="" || ($dataSource.getWhereClause()!="" && $includeAsFootnote=='1'))
+    #if($dataSource.getWhereClause()!="" && $includeAsFootnote=='1') footnote; #end
+    #if($footnoteString!="") footnote2; #end
+#end
+
+#if($BY)
+proc datasets library=WORK noprint; 
+    delete _BarChartTaskData; 
+run;
+#end
+]]></CodeTemplate>
+    <TemplateValues version="3.8"><![CDATA[
+{"noLabel":"No label","cluster":"1","stack":"0","displayRespLabel2":"defaultLabel","catRefLineValue":"","CLM":"Confidence limit (default)","respRefCustomLabel":"","upper":"Upper","confLevelCombo":"confLevelDefaultChoice","catReverse":"0","px":"Pixels","catRefLineOffsetNegative50Choice":"-0.5","none":"(none)","sasOS":"Linux LIN X64 3.10.0-1062.4.1.el7.x86_64","logBaseCombo":"10","defaultLabel":"Default label","barLimitStat":"clm","barStatLabels":"1","displayRespLabel1":"defaultLabel","legendLoc":"inside","crisp":"Crisp","catLabel":"","measureChoiceFreq":"Frequency count (default)","pressed":"Pressed","in":"Inches (default)","barSkin":"none","urlVar":"","lower":"Lower","confLevelCustomChoice":"Use custom value","catRefLineOffset":"0","statChoiceResponse":"sum","respRefCustom":"0","stdDev":"Standard deviation","respLabel":"","pixelWidth":"640","confLevel90Choice":"90%","catVerticalRotation":"1","respTickRotate":"respDiagonalRotation","catLabelRotation":"0","catRefLine":"0","respVerticalRotation":"0","respAxisMin":"0","barTrans100Choice":"100%","logAxis":"0","rolesGroup":"ROLES","respAxisMaxValue":"","titleString":"Heart Disease Distribution based on Gender (sex)","respAxisMax":"0","logBase10":"10 (default)","statisticGroup":"Statistic:","graphSize":"GRAPH SIZE","barOrient":"vertical","subcatGroup":"Options:","cm":"Cms","barTrans75Choice":"75%","fillGradient":"1","sortByData":"1","sasVersion":"9.46","includeAsFootnote":"0","barNumStd":"1","cmWidth":"16","respLabelRotation":"0","barNumStdChkbox":"0","addRolesGroup":"ADDITIONAL ROLES","whereClause":"Where clause:","footnoteSize":"8","cmHeight":"12","inside":"Inside","stdErr":"Standard error","logBaseline":"","dataTab":"DATA","useColor":"0","showRespGrid":"1","horizontal":"0","measureChoiceVar":"Variable","groupDisplay":"cluster","barTrans":"0.5","catTickRotate":"catVerticalRotation","pixelHeight":"480","respAxisMinValue":"","group":"json:[{\"value\":\"sex\",\"type\":\"Numeric\",\"length\":8,\"format\":\"BEST12.\",\"informat\":\"BEST32.\",\"className\":\"RoleObject\"}]","catRefValue":"1","catRefLineOffset50Choice":"0.5","barTrans50Choice":"50%","dimType":"in","statChoicePercent":"Percent of the sum","weight":"","barTrans25Choice":"25%","statsLabel":"Statistics name in label","catRefCustomLabel":"","both":"Both","catRefLabel":"catRefValue","measure":"","confLevel":"95","respRefLabel":"respRefValue","groupedBarStyle":"Display grouped bars:","catRefCustom":"0","outside":"Outside (default)","confLevelDefaultChoice":"95% (default)","footnoteString":"Female tend to have heart diseases compared to Male. In male, the distribution is not imbalanced compared to female that have almost the same distribution.","statChoiceSum":"Sum (default)","noStatsLabel":"No statistics name in label","appearanceTab":"APPEARANCE","respRefValue":"1","dataSource":{"librarytable":"WORK.IMPORT"},"barLimits":"none","measureAxis":"MEASURE AXIS","respRefLineValue":"","displayCatLabel":"noLabel","measureChoicePercent":"Frequency percent","catRefLineOffsetNegative25Choice":"-0.25","vertical":"1","titleSize":"12","title":"TITLE AND FOOTNOTE","barColor":"#CAD5E5","byVar":"","measureCombo":"freq","barDetails":"Details","catRefLineOffsetDefaultChoice":"0 (default)","barTransDefaultChoice":"0% (default)","respDiagonalRotation":"1","inchHeight":"4","statChoiceMean":"Mean","inchWidth":"6","gloss":"Gloss","logBaseE":"e","catRefLineOffset25Choice":"0.25","catDiagonalRotation":"0","respRefLine":"0","confLevel99Choice":"99%","sheen":"Sheen","categoryAxis":"CATEGORY AXIS","orientation":"CHART ORIENTATION","dataGroup":"DATA","logBase2":"2","barsGroup":"BARS","customLabel":"Custom label","category":"json:[{\"value\":\"target\",\"type\":\"Numeric\",\"length\":8,\"format\":\"BEST12.\",\"informat\":\"BEST32.\",\"className\":\"RoleObject\"}]","matte":"Matte"}
+]]></TemplateValues>
+</Task>
