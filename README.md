@@ -35,11 +35,12 @@
 -->
 
 ## 🖋 About Project:
-WIP.
+👉 This dataset contains information about contains diagnoses of heart disease patients. Machine learning model is needed in order <b>to determine whether a person has heart disease or not</b>.
 
 ## 📌 Objectives:
-*   Perform dataset exploration and EDA.
-*   Build logistic regression model to predict heart disease status.
+*   <b>Perform dataset exploration</b> using various type of visualizations.
+*   <b>Perform EDA</b> on given dataset.
+*   <b>Build logistic regression model</b> to predict heart disease status.
 <br><br>
 
 ## 🧾 Data Set Description:
