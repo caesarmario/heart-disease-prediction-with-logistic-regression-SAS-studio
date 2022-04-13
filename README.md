@@ -42,7 +42,7 @@
 *   <b>Perform EDA</b> on given dataset.
 *   <b>Build logistic regression model</b> to predict heart disease status.
 
-## 🧾 Data Set Description:
+## 🧾 Dataset Description:
 👉 There are **14 variables in this dataset**:
   - **9** **categorical** variables, and
   - **5** **continuous** variables.
@@ -142,7 +142,7 @@
 [![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#-table-of-contents)
 <br>
 
-### 📄 Dataset:
+### 🔍 Univariate Analysis:
 #### ▶ Univariate - Categorical:
 *   **sex (Gender)** <br>
 <img src="https://github.com/caesarmario/heart-disease-prediction-with-logistic-regression-SAS-studio/blob/main/Screenshot/Univariate%20Analysis/Categorical/1_sex.png" width="40%" alt="sex - UVC"><br>
