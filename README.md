@@ -17,22 +17,22 @@
 ## 📃 Table of Contents:
   - [About Project](#-about-project)
   - [Objectives](#-objectives)
-  - [Data Set Description](#-data-set-description)
-<!--
-  - [EDA](#-eda)
-      - [Data Sets Structure](#-data-sets-structure)
-      - [Training Data Set](#-training-data-set)
-          - [Univariate](#-univariate---training)
-          - [Bivariate](#-bivariate---training)
-      - [Testing Data Set](#-testing-data-set)
-          - [Univariate](#-univariate---testing)
-          - [Bivariate](#-bivariate---testing)
-  - [Data Imputation](#-data-imputation)
-  - [Logistic Regression Result](#-logistic-regression-result)
-      - [Logistic Regression Summary](#-summary-of-logistic-regression)
-      - [Model Output](#-logistic-regression-model-output)
-      - [Prediction Output](#-prediction-output)
--->
+  - [Dataset Description](#-dataset-description)
+      - [Dataset Summary](#-dataset-summary)
+      - [Univariate Analysis](#-univariate-analysis)
+          - [Categorical](#-univariate---categorical)
+          - [Numerical](#-univariate---numerical)
+      - [EDA 1](#1%EF%B8%8F⃣-eda-1)
+      - [EDA 2](#2%EF%B8%8F⃣-eda-2)
+      - [EDA 3](#3%EF%B8%8F⃣-eda-3)
+      - [EDA 4](#4%EF%B8%8F⃣-eda-4)
+      - [EDA 5](#5%EF%B8%8F⃣-eda-5)
+  - [Dataset Pre-processing](#-dataset-pre-processing)
+  - [Logistic Regression](#-logistic-regression)
+      - [Building LR Model](#-building-logistic-regression-model)
+      - [Probability in Training](#-probability-in-training)
+      - [Probability in Testing](#-predictions-on-test)
+  - [Output Delivery System (ODS)](#-output-delivery-system)
 
 ## 🖋 About Project:
 👉 This dataset contains information about contains diagnoses of heart disease patients. Machine learning model is needed in order <b>to determine whether a person has heart disease or not</b>.
@@ -274,6 +274,7 @@
 
 ## 📥 Output Delivery System:
 - Output Delivery System (ODS) is used to present the output data from SAS program in the form of a nicely presented report which would hep the user to be able to understand the output of their analysis much easier. For this case, the prediction exported as PDF file (`.pdf`)
+- **The prediction report can be seen** <b><i><u><a href="https://github.com/caesarmario/heart-disease-prediction-with-logistic-regression-SAS-studio/blob/main/Heart_Disease_Prediction_Report_caesarmario.pdf">here</a></u></i></b>.
 > Each step for creating output (ODS) file are available on part no. 5 in `main.sas` file.
 
 [![](https://img.shields.io/badge/back%20to%20top-%E2%86%A9-blue)](#-table-of-contents)
