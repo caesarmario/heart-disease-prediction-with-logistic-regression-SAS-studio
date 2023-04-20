@@ -8,8 +8,8 @@
   <a href="https://linktr.ee/caesarmario_">
     <img src="https://img.shields.io/badge/Follow%20My%20Other%20Works-019875?style=flat&labelColor=019875&link=https:/linktr.ee/caesarmario_" alt="Linktree"/>
   </a>
-  <a href="https://www.kaggle.com/code/caesarmario/heart-disease-eda-prediction">
-    <img src="https://img.shields.io/badge/-Similar%20Works%20on%20Kaggle-teal?style=flat&logo=kaggle&logoColor=deepblue&link=https://www.kaggle.com/code/caesarmario/heart-disease-eda-prediction" alt="Similar Works"/>
+  <a href="https://www.kaggle.com/code/caesarmario/listen-to-your-heart-a-disease-prediction">
+    <img src="https://img.shields.io/badge/-Similar%20Works%20on%20Kaggle-teal?style=flat&logo=kaggle&logoColor=deepblue&link=https://www.kaggle.com/code/caesarmario/listen-to-your-heart-a-disease-prediction" alt="Similar Works"/>
   </a>
 </p>
 <br>
@@ -283,7 +283,7 @@
 ## 🙌 Support me!
 
 👉 If you find this project useful, **please ⭐ this repository 😆**!
-### 🎈 Check out my work on Kaggle [here](https://www.kaggle.com/code/caesarmario/heart-disease-eda-prediction) using **various machine learning models**!
+### 🎈 Check out my work on Kaggle [here](https://www.kaggle.com/code/caesarmario/listen-to-your-heart-a-disease-prediction) using **various machine learning models**!
 ---
 
 👉 _More about myself: <a href="https://linktr.ee/caesarmario_"> here </a>_
